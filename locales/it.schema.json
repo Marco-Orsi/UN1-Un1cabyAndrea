@@ -1344,6 +1344,156 @@
         "name": "Immagine con testo"
       }
     },
+    "testo-arricchito-immagine": {
+      "name": "Testo arricchito con immagine",
+      "settings": {
+        "header_bg": {
+          "content": "Sfondo"
+        },
+        "background_image": {
+          "label": "Immagine di sfondo"
+        },
+        "background_overlay_opacity": {
+          "label": "Opacità overlay"
+        },
+        "content_alignment": {
+          "label": "Allineamento testo"
+        }
+      },
+      "blocks": {
+        "subtitle": {
+          "name": "Sottotitolo",
+          "settings": {
+            "subtitle": {
+              "label": "Sottotitolo"
+            }
+          }
+        },
+        "rich_text": {
+          "name": "Testo",
+          "settings": {
+            "text": {
+              "label": "Testo",
+              "info": "Scrivi PICTURE1, PICTURE2 o PICTURE3 nel testo per inserire la corrispondente immagine inline."
+            },
+            "text_transform": {
+              "label": "Trasformazione del carattere",
+              "options__1": {
+                "label": "Nessuna"
+              },
+              "options__2": {
+                "label": "Maiuscolo"
+              }
+            },
+            "hide_on_mobile": {
+              "label": "Disabilita su mobile"
+            },
+            "text_scale_desktop": {
+              "label": "Scala dell'intestazione per schermo grande"
+            },
+            "text_scale_mobile": {
+              "label": "Scala dell'intestazione per mobile"
+            },
+            "line_height": {
+              "label": "Altezza della riga"
+            },
+            "header_images": {
+              "content": "Immagini inline"
+            },
+            "image_1": {
+              "label": "Prima immagine"
+            },
+            "image_1_link": {
+              "label": "Link della prima immagine"
+            },
+            "image_2": {
+              "label": "Seconda immagine"
+            },
+            "image_2_link": {
+              "label": "Link della seconda immagine"
+            },
+            "image_3": {
+              "label": "Terza immagine"
+            },
+            "image_3_link": {
+              "label": "Link della terza immagine"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Testo arricchito con immagine"
+      }
+    },
+    "image-with-products": {
+      "name": "Immagine con prodotti",
+      "settings": {
+        "header_image": {
+          "content": "Immagine"
+        },
+        "image": {
+          "label": "Immagine"
+        },
+        "header_heading": {
+          "content": "Titolo"
+        },
+        "heading": {
+          "label": "Titolo"
+        },
+        "heading_position_vertical": {
+          "label": "Posizione titolo (verticale)",
+          "options__1": {
+            "label": "In alto"
+          },
+          "options__2": {
+            "label": "Centro"
+          },
+          "options__3": {
+            "label": "In basso"
+          }
+        },
+        "heading_position_horizontal": {
+          "label": "Posizione titolo (orizzontale)",
+          "options__1": {
+            "label": "Sinistra"
+          },
+          "options__2": {
+            "label": "Centro"
+          },
+          "options__3": {
+            "label": "Destra"
+          }
+        },
+        "header_layout": {
+          "content": "Layout"
+        },
+        "layout": {
+          "label": "Posizione immagine",
+          "options__1": {
+            "label": "Sinistra"
+          },
+          "options__2": {
+            "label": "Destra"
+          }
+        },
+        "header_products": {
+          "content": "Prodotti"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Prodotto",
+          "settings": {
+            "product": {
+              "label": "Prodotto"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Immagine con prodotti"
+      }
+    },
     "main-article": {
       "name": "Articolo del blog",
       "blocks": {

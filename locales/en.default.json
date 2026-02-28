@@ -327,6 +327,13 @@
       "view_all": "View all",
       "view_all_label": "View all products in the {{ collection_name }} collection"
     },
+    "image-with-products": {
+      "empty_products": "No products selected.",
+      "add_products_instructions": "Add product blocks and choose products in the theme editor."
+    },
+    "testo-arricchito-immagine": {
+      "empty": "Add a subtitle or text block to get started."
+    },
     "collection_list": {
       "view_all": "View all"
     },

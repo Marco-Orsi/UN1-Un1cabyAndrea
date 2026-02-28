@@ -1,0 +1,321 @@
+{{ 'section-testo-arricchito-immagine.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="testo-arricchito gradient color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+
+  {%- comment -%} Immagine di sfondo opzionale {%- endcomment -%}
+  {%- if section.settings.background_image != blank -%}
+    <div class="testo-arricchito__bg">
+      {{
+        section.settings.background_image
+        | image_url: width: 3200
+        | image_tag:
+          loading: 'lazy',
+          class: 'testo-arricchito__bg-img',
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3200'
+      }}
+      {%- if section.settings.background_overlay_opacity > 0 -%}
+        <div
+          class="testo-arricchito__bg-overlay"
+          style="opacity: {{ section.settings.background_overlay_opacity | divided_by: 100.0 }};"
+        ></div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="page-width testo-arricchito__content">
+    <div class="testo-arricchito__blocks testo-arricchito__blocks--{{ section.settings.content_alignment }}">
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+          {%- when 'subtitle' -%}
+            <p
+              class="testo-arricchito__subtitle{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {{- block.settings.subtitle | escape -}}
+            </p>
+
+          {%- when 'rich_text' -%}
+            {%- liquid
+              assign processed_text = block.settings.text
+
+              if block.settings.image_1 != blank
+                capture picture1_html
+                  if block.settings.image_1_link != blank
+                    echo '<a href="' | append: block.settings.image_1_link | append: '" class="testo-arricchito__inline-link">'
+                  endif
+                  echo block.settings.image_1 | image_url: width: 300 | image_tag: class: 'testo-arricchito__inline-img', loading: 'lazy', alt: ''
+                  if block.settings.image_1_link != blank
+                    echo '</a>'
+                  endif
+                endcapture
+                assign picture1_wrapped = '<span class="testo-arricchito__inline-image">' | append: picture1_html | append: '</span>'
+                assign processed_text = processed_text | replace: 'PICTURE1', picture1_wrapped
+              endif
+
+              if block.settings.image_2 != blank
+                capture picture2_html
+                  if block.settings.image_2_link != blank
+                    echo '<a href="' | append: block.settings.image_2_link | append: '" class="testo-arricchito__inline-link">'
+                  endif
+                  echo block.settings.image_2 | image_url: width: 300 | image_tag: class: 'testo-arricchito__inline-img', loading: 'lazy', alt: ''
+                  if block.settings.image_2_link != blank
+                    echo '</a>'
+                  endif
+                endcapture
+                assign picture2_wrapped = '<span class="testo-arricchito__inline-image">' | append: picture2_html | append: '</span>'
+                assign processed_text = processed_text | replace: 'PICTURE2', picture2_wrapped
+              endif
+
+              if block.settings.image_3 != blank
+                capture picture3_html
+                  if block.settings.image_3_link != blank
+                    echo '<a href="' | append: block.settings.image_3_link | append: '" class="testo-arricchito__inline-link">'
+                  endif
+                  echo block.settings.image_3 | image_url: width: 300 | image_tag: class: 'testo-arricchito__inline-img', loading: 'lazy', alt: ''
+                  if block.settings.image_3_link != blank
+                    echo '</a>'
+                  endif
+                endcapture
+                assign picture3_wrapped = '<span class="testo-arricchito__inline-image">' | append: picture3_html | append: '</span>'
+                assign processed_text = processed_text | replace: 'PICTURE3', picture3_wrapped
+              endif
+
+              assign scale_desktop = block.settings.text_scale_desktop | divided_by: 100.0
+              assign scale_mobile  = block.settings.text_scale_mobile  | divided_by: 100.0
+            -%}
+
+            <div
+              class="testo-arricchito__text rte{% if block.settings.text_transform == 'uppercase' %} testo-arricchito__text--uppercase{% endif %}{% if block.settings.hide_on_mobile %} small-hide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              style="--testo-scale-desktop: {{ scale_desktop }}; --testo-scale-mobile: {{ scale_mobile }}; --testo-line-height: {{ block.settings.line_height }};"
+              {{ block.shopify_attributes }}
+            >
+              {{ processed_text }}
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.testo-arricchito-immagine.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.testo-arricchito-immagine.settings.header_bg.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:sections.testo-arricchito-immagine.settings.background_image.label"
+    },
+    {
+      "type": "range",
+      "id": "background_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "t:sections.testo-arricchito-immagine.settings.background_overlay_opacity.label",
+      "default": 0
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:sections.testo-arricchito-immagine.settings.content_alignment.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.rich-text.settings.content_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.rich-text.settings.content_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.rich-text.settings.content_alignment.options__3.label"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtitle",
+      "name": "t:sections.testo-arricchito-immagine.blocks.subtitle.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "default": "Subtitle",
+          "label": "t:sections.testo-arricchito-immagine.blocks.subtitle.settings.subtitle.label"
+        }
+      ]
+    },
+    {
+      "type": "rich_text",
+      "name": "t:sections.testo-arricchito-immagine.blocks.rich_text.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>The harmony between powerful PICTURE1 high-performance ingredients PICTURE2 and exceptionally simple PICTURE3 skincare routines.</p>",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text.label",
+          "info": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text.info"
+        },
+        {
+          "type": "select",
+          "id": "text_transform",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text_transform.label",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text_transform.options__1.label"
+            },
+            {
+              "value": "uppercase",
+              "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text_transform.options__2.label"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_mobile",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.hide_on_mobile.label",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "text_scale_desktop",
+          "min": 50,
+          "max": 250,
+          "step": 5,
+          "unit": "%",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text_scale_desktop.label",
+          "default": 140
+        },
+        {
+          "type": "range",
+          "id": "text_scale_mobile",
+          "min": 50,
+          "max": 200,
+          "step": 5,
+          "unit": "%",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.text_scale_mobile.label",
+          "default": 110
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "min": 1,
+          "max": 3,
+          "step": 0.1,
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.line_height.label",
+          "default": 1.7
+        },
+        {
+          "type": "header",
+          "content": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.header_images.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_1.label"
+        },
+        {
+          "type": "url",
+          "id": "image_1_link",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_1_link.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_2.label"
+        },
+        {
+          "type": "url",
+          "id": "image_2_link",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_2_link.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_3.label"
+        },
+        {
+          "type": "url",
+          "id": "image_3_link",
+          "label": "t:sections.testo-arricchito-immagine.blocks.rich_text.settings.image_3_link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.testo-arricchito-immagine.presets.name",
+      "blocks": [
+        { "type": "subtitle" },
+        { "type": "rich_text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

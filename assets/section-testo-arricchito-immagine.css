@@ -1,0 +1,151 @@
+/* ============================================================
+   Testo Arricchito con Immagine
+   Sezione: testo grande con immagini circolari inline nel testo
+   ============================================================ */
+
+/* Wrapper principale — position:relative per l'immagine di sfondo */
+.testo-arricchito {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Sfondo ───────────────────────────────────────────────── */
+.testo-arricchito__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.testo-arricchito__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.testo-arricchito__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+/* ── Contenuto ────────────────────────────────────────────── */
+.testo-arricchito__content {
+  position: relative;
+  z-index: 1;
+}
+
+.testo-arricchito__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.testo-arricchito__blocks--left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.testo-arricchito__blocks--center {
+  align-items: center;
+  text-align: center;
+}
+
+.testo-arricchito__blocks--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* ── Sottotitolo ──────────────────────────────────────────── */
+.testo-arricchito__subtitle {
+  margin: 0;
+  font-size: calc(var(--font-body-scale) * 1.4rem);
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+  letter-spacing: 0.05em;
+  color: currentColor;
+}
+
+@media screen and (min-width: 750px) {
+  .testo-arricchito__subtitle {
+    font-size: calc(var(--font-body-scale) * 1.8rem);
+  }
+}
+
+/* ── Testo principale ─────────────────────────────────────── */
+.testo-arricchito__text {
+  margin: 0;
+  width: 100%;
+  font-size: calc(var(--font-heading-scale) * var(--testo-scale-mobile, 1.1) * 2.2rem);
+  line-height: var(--testo-line-height, 1.5);
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: calc(var(--font-heading-scale) * 0.02rem);
+  color: currentColor;
+  word-wrap: break-word;
+}
+
+@media screen and (min-width: 750px) {
+  .testo-arricchito__text {
+    font-size: calc(var(--font-heading-scale) * var(--testo-scale-desktop, 1.4) * 2.8rem);
+  }
+}
+
+.testo-arricchito__text--uppercase {
+  text-transform: uppercase;
+}
+
+/* Rimuove i margini dei <p> interni prodotti dal richtext */
+.testo-arricchito__text p {
+  margin: 0;
+}
+
+/* ── Immagini inline nel testo ────────────────────────────── */
+
+/*
+  .testo-arricchito__inline-image è uno <span> inline-block che
+  contiene l'immagine circolare. La dimensione è relativa all'em
+  corrente (font-size del blocco testo) per scalare automaticamente
+  con il testo su ogni viewport.
+*/
+.testo-arricchito__inline-image {
+  display: inline-block;
+  width: 1.3em;
+  height: 1.3em;
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+  margin: 0 0.15em;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.testo-arricchito__inline-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 50%;
+}
+
+.testo-arricchito__inline-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.testo-arricchito__inline-link .testo-arricchito__inline-img {
+  transition: transform 0.3s ease;
+}
+
+.testo-arricchito__inline-link:hover .testo-arricchito__inline-img {
+  transform: scale(1.05);
+}

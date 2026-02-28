@@ -1,0 +1,243 @@
+/* Image with products section */
+
+.image-with-products .grid {
+  margin-bottom: 0;
+}
+
+.image-with-products .grid__item {
+  position: relative;
+}
+
+@media screen and (min-width: 750px) {
+  .image-with-products__grid--reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+/* Colonna immagine */
+.image-with-products__media-item {
+  align-self: start;
+  min-height: 0;
+  overflow: visible;
+  width: 100%;
+}
+
+/* Outer wrapper: position:relative così l'overlay si posiziona rispetto a questo,
+   NON dentro .media (che applica display:block a tutti i figli diretti via .media > *) */
+.image-with-products__media-outer {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+/* Contenitore immagine */
+.image-with-products__media-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--media-radius, 0);
+  display: block;
+}
+
+.image-with-products__media-wrap.image-with-products__media--small {
+  height: 19.4rem;
+}
+
+.image-with-products__media-wrap.image-with-products__media--medium {
+  height: 29.6rem;
+}
+
+.image-with-products__media-wrap.image-with-products__media--large {
+  height: 43.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .image-with-products__media-wrap.image-with-products__media--small {
+    height: 31.4rem;
+  }
+
+  .image-with-products__media-wrap.image-with-products__media--medium {
+    height: 46rem;
+  }
+
+  .image-with-products__media-wrap.image-with-products__media--large {
+    height: 69.5rem;
+  }
+}
+
+.image-with-products__media-wrap.image-with-products__media--placeholder {
+  overflow: hidden;
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+.image-with-products__media-wrap.image-with-products__media--placeholder.image-with-products__media--adapt {
+  height: 20rem;
+}
+
+@media screen and (min-width: 750px) {
+  .image-with-products__media-wrap.image-with-products__media--placeholder.image-with-products__media--adapt {
+    height: 30rem;
+  }
+}
+
+.image-with-products__media--placeholder > svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* -----------------------------------------------------------------------
+   OVERLAY HEADING
+   IMPORTANTE: il div overlay è figlio di .image-with-products__media-outer,
+   NON di .image-with-products__media-wrap.media
+   Così la regola del tema ".media > *" (che forza display:block) non lo tocca.
+   Il div è il flex-container, l'h2 dentro è il flex-item ben posizionabile.
+----------------------------------------------------------------------- */
+.image-with-products__heading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  /* default: centrato */
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+@media screen and (min-width: 750px) {
+  .image-with-products__heading-overlay {
+    padding: 3rem 2rem;
+  }
+}
+
+/* Posizione verticale (justify-content lungo l'asse column) */
+.image-with-products__heading--v-top {
+  justify-content: flex-start;
+}
+
+.image-with-products__heading--v-center {
+  justify-content: center;
+}
+
+.image-with-products__heading--v-bottom {
+  justify-content: flex-end;
+}
+
+/* Posizione orizzontale (align-items lungo l'asse cross) */
+.image-with-products__heading--h-left {
+  align-items: flex-start;
+}
+
+.image-with-products__heading--h-center {
+  align-items: center;
+}
+
+.image-with-products__heading--h-right {
+  align-items: flex-end;
+}
+
+/* L'h2 è un normale flex-item: non ha bisogno di flex né position propri */
+.image-with-products__heading {
+  margin: 0;
+  pointer-events: auto;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  line-height: 1.2;
+}
+
+/* text-align segue la posizione orizzontale */
+.image-with-products__heading--h-left .image-with-products__heading {
+  text-align: left;
+}
+
+.image-with-products__heading--h-center .image-with-products__heading {
+  text-align: center;
+}
+
+.image-with-products__heading--h-right .image-with-products__heading {
+  text-align: right;
+}
+
+/* Colonna prodotti */
+.image-with-products__products-item {
+  display: flex;
+  align-items: stretch;
+}
+
+.image-with-products__products-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 20rem;
+}
+
+.image-with-products__slider {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-with-products__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 2rem;
+}
+
+.image-with-products__list.contains-card--product .card-wrapper {
+  height: 100%;
+}
+
+.image-with-products__slide {
+  display: flex;
+}
+
+.image-with-products__slider-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.image-with-products__slider-buttons .slider-counter {
+  min-width: 4rem;
+  text-align: center;
+}
+
+.image-with-products__empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: rgba(var(--color-foreground), 0.04);
+  border-radius: var(--media-radius, 0.4rem);
+}
+
+.image-with-products__empty .caption {
+  margin: 0 0 0.5rem;
+}
+
+/* Mobile */
+@media screen and (max-width: 749px) {
+  .image-with-products__list.slider {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .image-with-products__list.slider .image-with-products__slide {
+    min-width: 85%;
+    max-width: 85%;
+  }
+}

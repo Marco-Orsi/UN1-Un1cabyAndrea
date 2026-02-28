@@ -329,6 +329,13 @@
       "view_all": "Visualizza tutto",
       "view_all_label": "Visualizza tutti i prodotti della collezione {{ collection_name }}"
     },
+    "image-with-products": {
+      "empty_products": "Nessun prodotto selezionato.",
+      "add_products_instructions": "Aggiungi blocchi prodotto e scegli i prodotti nell'editor del tema."
+    },
+    "testo-arricchito-immagine": {
+      "empty": "Aggiungi un blocco sottotitolo o testo per iniziare."
+    },
     "collection_list": {
       "view_all": "Visualizza tutto"
     },
