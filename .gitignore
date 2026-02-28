@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Editor / IDE
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
