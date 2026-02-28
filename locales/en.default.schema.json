@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "settings_schema": {
     "global": {
@@ -3395,7 +3404,70 @@
       },
       "presets": {
         "name": "Collapsible content"
+      },
+
+
+  "logo-banner": {
+    "name": "Logo banner",
+    "presets": {
+      "name": "Logo banner"
+    },
+    "settings": {
+      "media_type": {
+        "label": "Background media",
+        "options__1": {
+          "label": "Image"
+        },
+        "options__2": {
+          "label": "Video"
+        }
+      },
+      "image": {
+        "label": "Background image",
+        "info": "Used when media type is Image"
+      },
+      "video_url": {
+        "label": "YouTube or Vimeo URL",
+        "info": "Used when media type is Video. Autoplays muted."
+      },
+      "video_description": {
+        "label": "Video description"
+      },
+      "header__logo": {
+        "content": "Logo"
+      },
+      "logo": {
+        "label": "Logo image",
+        "info": "Uses store logo if not set"
+      },
+      "logo_width_desktop": {
+        "label": "Logo width (desktop)"
+      },
+      "logo_width_mobile": {
+        "label": "Logo width (mobile)"
+      },
+      "header__scroll": {
+        "content": "Scroll animation"
+      },
+      "logo_final_scale": {
+        "label": "Logo size at end of scroll",
+        "info": "Percentage of original size (10% = very small, 80% = almost full)"
+      },
+      "logo_final_position": {
+        "label": "Logo position at end of scroll",
+        "info": "Vertical position (100% = bottom of banner)"
+      },
+      "header__layout": {
+        "content": "Layout"
+      },
+      "hero_height": {
+        "label": "Hero height"
+      },
+      "overlay_opacity": {
+        "label": "Overlay opacity"
       }
+    }
+  }
     }
   }
 }
