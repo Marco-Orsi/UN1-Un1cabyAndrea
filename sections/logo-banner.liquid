@@ -1,0 +1,434 @@
+{% comment %}
+  Logo Banner - Hero section con sfondo video/immagine e logo centrale.
+  Il logo si rimpicciolisce e si sposta verso il basso durante lo scroll.
+  Utilizzo: header-group (sopra la sezione header) o come sezione standalone.
+{% endcomment %}
+
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign media_type = section.settings.media_type
+  assign logo_image = section.settings.logo | default: settings.logo
+  assign logo_width_desktop = section.settings.logo_width_desktop
+  assign logo_width_mobile = section.settings.logo_width_mobile
+  assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+  assign min_height = section.settings.hero_height
+-%}
+
+{%- style -%}
+  #LogoBanner-{{ section.id }} {
+    --logo-banner-overlay: {{ overlay_opacity }};
+    --logo-banner-min-height: {{ min_height }}vh;
+    --logo-banner-logo-width-desktop: {{ logo_width_desktop }}%;
+    --logo-banner-logo-width-mobile: {{ logo_width_mobile }}%;
+  }
+{%- endstyle -%}
+
+<div
+  id="LogoBanner-{{ section.id }}"
+  class="logo-banner color-{{ section.settings.color_scheme }} gradient{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-logo-final-scale="{{ section.settings.logo_final_scale }}"
+  data-logo-final-position="{{ section.settings.logo_final_position }}"
+>
+  <div class="logo-banner__media-wrapper">
+    {%- if media_type == 'video' and section.settings.video_url != blank -%}
+      {%- liquid
+        assign video_id = section.settings.video_url.id
+        assign video_host = section.settings.video_url.type
+      -%}
+      <div class="logo-banner__video media">
+        {%- if video_host == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&showinfo=0&rel=0"
+            class="logo-banner__iframe js-youtube"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            loading="lazy"
+            title="{{ section.settings.video_description | escape }}"
+          ></iframe>
+        {%- elsif video_host == 'vimeo' -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&loop=1&muted=1&background=1"
+            class="logo-banner__iframe js-vimeo"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            loading="lazy"
+            title="{{ section.settings.video_description | escape }}"
+          ></iframe>
+        {%- endif -%}
+      </div>
+    {%- elsif section.settings.image != blank -%}
+      <div class="logo-banner__media media">
+        {%- assign image = section.settings.image -%}
+        {%- assign image_height = image.width | divided_by: image.aspect_ratio -%}
+        {{
+          image
+          | image_url: width: 3840
+          | image_tag:
+            class: 'logo-banner__image',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+            sizes: '100vw',
+            height: image_height,
+            width: image.width,
+            fetchpriority: 'high'
+        }}
+      </div>
+    {%- else -%}
+      <div class="logo-banner__media media placeholder">
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {%- endif -%}
+    <div class="logo-banner__overlay" aria-hidden="true"></div>
+  </div>
+
+  <a href="{{ routes.root_url }}" class="logo-banner__logo-link link focus-inset" id="LogoBanner-Logo-{{ section.id }}">
+    {%- if logo_image != blank -%}
+      {%- assign logo_alt = logo_image.alt | default: shop.name | escape -%}
+      {%- assign logo_height = logo_image.width | divided_by: logo_image.aspect_ratio -%}
+      {{
+        logo_image
+        | image_url: width: 600
+        | image_tag:
+          class: 'logo-banner__logo motion-reduce',
+          widths: '150, 200, 300, 400, 500, 600',
+          height: logo_height,
+          width: logo_image.width,
+          alt: logo_alt,
+          sizes: '(min-width: 750px) var(--logo-banner-logo-width-desktop), var(--logo-banner-logo-width-mobile)',
+          preload: true
+      }}
+    {%- else -%}
+      <span class="logo-banner__shop-name h1">{{ shop.name }}</span>
+    {%- endif -%}
+  </a>
+</div>
+
+{% javascript %}
+  class LogoBannerScroll extends HTMLElement {
+    constructor() {
+      super();
+      this.logo = null;
+      this.banner = null;
+      this.rafId = null;
+    }
+
+    connectedCallback() {
+      this.banner = this.closest('section')?.querySelector('.logo-banner') || this.previousElementSibling;
+      this.logo = this.banner?.querySelector('.logo-banner__logo-link');
+      if (!this.banner || !this.logo) return;
+
+      this.onScroll = this.onScroll.bind(this);
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      this.onScroll();
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('scroll', this.onScroll);
+      if (this.rafId) cancelAnimationFrame(this.rafId);
+    }
+
+    onScroll() {
+      if (this.rafId) cancelAnimationFrame(this.rafId);
+      this.rafId = requestAnimationFrame(() => this.updateScrollState());
+    }
+
+    updateScrollState() {
+      const rect = this.banner.getBoundingClientRect();
+      const bannerHeight = this.banner.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      const finalScale = parseFloat(this.banner.dataset.logoFinalScale || 15) / 100;
+      const finalPosition = parseFloat(this.banner.dataset.logoFinalPosition || 100) / 100;
+
+      let progress = 0;
+      if (rect.bottom <= 0) {
+        progress = 1;
+      } else if (rect.top < viewportHeight) {
+        progress = Math.min(1, Math.max(0, -rect.top / bannerHeight));
+      }
+
+      const scale = 1 - progress * (1 - finalScale);
+      const topPercent = 50 + (finalPosition * 100 - 50) * progress;
+      const translateYPercent = -50 - 50 * progress;
+      this.logo.style.setProperty('--logo-scale', String(scale));
+      this.logo.style.setProperty('--logo-top-percent', String(topPercent));
+      this.logo.style.setProperty('--logo-translate-y-percent', String(translateYPercent));
+      if (progress >= 1 && finalPosition >= 0.99) {
+        this.logo.style.bottom = '0';
+        this.logo.style.top = 'auto';
+      } else {
+        this.logo.style.bottom = 'auto';
+        this.logo.style.top = `${topPercent}%`;
+      }
+      this.banner.dataset.scrollProgress = progress;
+      this.rafId = null;
+    }
+  }
+  customElements.define('logo-banner-scroll', LogoBannerScroll);
+{% endjavascript %}
+
+<logo-banner-scroll>
+  <style>
+    .section--logo-banner {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-banner {
+      position: relative;
+      min-height: var(--logo-banner-min-height, 70vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-banner__media-wrapper {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .logo-banner__media,
+    .logo-banner__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .logo-banner__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .logo-banner__iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      min-width: 100%;
+      min-height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+
+    @media (aspect-ratio: 16/9) {
+      .logo-banner__iframe {
+        width: 100%;
+        height: 56.25vw;
+        min-height: 100%;
+        min-width: 177.78vh;
+      }
+    }
+
+    .logo-banner__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgb(0, 0, 0);
+      opacity: var(--logo-banner-overlay, 0.3);
+      z-index: 1;
+    }
+
+    .logo-banner__logo-link {
+      position: absolute;
+      left: 50%;
+      z-index: 2;
+      transform: translate(-50%, calc(var(--logo-translate-y-percent, -50) * 1%)) scale(var(--logo-scale, 1));
+      transform-origin: center center;
+      display: block;
+      max-width: var(--logo-banner-logo-width-desktop, 80%);
+      transition: transform 0.08s ease-out;
+    }
+
+    .logo-banner__logo {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .logo-banner__shop-name {
+      color: rgb(var(--color-foreground));
+    }
+
+    @media screen and (max-width: 749px) {
+      .logo-banner__logo-link {
+        max-width: var(--logo-banner-logo-width-mobile, 85%);
+      }
+    }
+
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  </style>
+</logo-banner-scroll>
+
+{% schema %}
+{
+  "name": "t:sections.logo-banner.name",
+  "tag": "section",
+  "class": "section section--logo-banner",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "options": [
+        {
+          "value": "image",
+          "label": "t:sections.logo-banner.settings.media_type.options__1.label"
+        },
+        {
+          "value": "video",
+          "label": "t:sections.logo-banner.settings.media_type.options__2.label"
+        }
+      ],
+      "default": "image",
+      "label": "t:sections.logo-banner.settings.media_type.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.logo-banner.settings.image.label",
+      "info": "t:sections.logo-banner.settings.image.info"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "label": "t:sections.logo-banner.settings.video_url.label",
+      "info": "t:sections.logo-banner.settings.video_url.info"
+    },
+    {
+      "type": "text",
+      "id": "video_description",
+      "label": "t:sections.logo-banner.settings.video_description.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.logo-banner.settings.header__logo.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.logo-banner.settings.logo.label",
+      "info": "t:sections.logo-banner.settings.logo.info"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "min": 30,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 80,
+      "label": "t:sections.logo-banner.settings.logo_width_desktop.label"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "min": 50,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 85,
+      "label": "t:sections.logo-banner.settings.logo_width_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.logo-banner.settings.header__scroll.content"
+    },
+    {
+      "type": "range",
+      "id": "logo_final_scale",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 15,
+      "label": "t:sections.logo-banner.settings.logo_final_scale.label",
+      "info": "t:sections.logo-banner.settings.logo_final_scale.info"
+    },
+    {
+      "type": "range",
+      "id": "logo_final_position",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "label": "t:sections.logo-banner.settings.logo_final_position.label",
+      "info": "t:sections.logo-banner.settings.logo_final_position.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.logo-banner.settings.header__layout.content"
+    },
+    {
+      "type": "range",
+      "id": "hero_height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 70,
+      "label": "t:sections.logo-banner.settings.hero_height.label"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 30,
+      "label": "t:sections.logo-banner.settings.overlay_opacity.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.logo-banner.presets.name"
+    }
+  ]
+}
+{% endschema %}
