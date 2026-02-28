@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "settings_schema": {
     "colors": {
@@ -3396,6 +3405,67 @@
       "presets": {
         "name": "Elenco ordini rapido"
       }
+    },
+   "logo-banner": {
+    "name": "Logo banner",
+    "presets": {
+      "name": "Logo banner"
+    },
+    "settings": {
+      "media_type": {
+        "label": "Media di sfondo",
+        "options__1": {
+          "label": "Immagine"
+        },
+        "options__2": {
+          "label": "Video"
+        }
+      },
+      "image": {
+        "label": "Immagine di sfondo",
+        "info": "Usata quando il tipo media è Immagine"
+      },
+      "video_url": {
+        "label": "URL YouTube o Vimeo",
+        "info": "Usato quando il tipo media è Video. Autoplay senza audio."
+      },
+      "video_description": {
+        "label": "Descrizione video"
+      },
+      "header__logo": {
+        "content": "Logo"
+      },
+      "logo": {
+        "label": "Immagine logo",
+        "info": "Usa il logo del negozio se non impostato"
+      },
+      "logo_width_desktop": {
+        "label": "Larghezza logo (desktop)"
+      },
+      "logo_width_mobile": {
+        "label": "Larghezza logo (mobile)"
+      },
+      "header__scroll": {
+        "content": "Animazione scroll"
+      },
+      "logo_final_scale": {
+        "label": "Grandezza logo a fine scroll",
+        "info": "Percentuale della dimensione originale (10% = molto piccolo, 80% = quasi intero)"
+      },
+      "logo_final_position": {
+        "label": "Posizione logo a fine scroll",
+        "info": "Posizione verticale (100% = fondo del banner)"
+      },
+      "header__layout": {
+        "content": "Layout"
+      },
+      "hero_height": {
+        "label": "Altezza hero"
+      },
+      "overlay_opacity": {
+        "label": "Opacità overlay"
+   }
     }
+  }
   }
 }
