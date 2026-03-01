@@ -1,0 +1,378 @@
+{{ 'section-sezione-parallasse.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #Parallasse-{{ section.id }} {
+    {% if section.settings.bg_color != blank %}
+      background-color: {{ section.settings.bg_color }};
+    {% endif %}
+    {% if section.settings.text_color != blank %}
+      color: {{ section.settings.text_color }};
+    {% endif %}
+    --para-text-align: {{ section.settings.text_align }};
+    --para-rot: {{ section.settings.max_rotation }}deg;
+  }
+{%- endstyle -%}
+
+<div
+  id="Parallasse-{{ section.id }}"
+  class="parallasse section-{{ section.id }}-padding"
+  data-max-rotation="{{ section.settings.max_rotation }}"
+>
+
+  {%- comment -%} ── Parallax images ── {%- endcomment -%}
+  <div class="parallasse__images" aria-hidden="true">
+
+    {%- comment -%} Left image {%- endcomment -%}
+    <div class="parallasse__image parallasse__image--left" id="ParaLeft-{{ section.id }}">
+      {%- if section.settings.image_1 != blank -%}
+        {%- if section.settings.image_1_link != blank -%}
+          <a href="{{ section.settings.image_1_link }}" tabindex="-1">
+        {%- endif -%}
+        {{
+          section.settings.image_1
+          | image_url: width: 700
+          | image_tag:
+            widths: '350, 500, 700',
+            loading: 'lazy',
+            alt: section.settings.image_1.alt
+        }}
+        {%- if section.settings.image_1_link != blank -%}
+          </a>
+        {%- endif -%}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Right image {%- endcomment -%}
+    <div class="parallasse__image parallasse__image--right" id="ParaRight-{{ section.id }}">
+      {%- if section.settings.image_2 != blank -%}
+        {%- if section.settings.image_2_link != blank -%}
+          <a href="{{ section.settings.image_2_link }}" tabindex="-1">
+        {%- endif -%}
+        {{
+          section.settings.image_2
+          | image_url: width: 700
+          | image_tag:
+            widths: '350, 500, 700',
+            loading: 'lazy',
+            alt: section.settings.image_2.alt
+        }}
+        {%- if section.settings.image_2_link != blank -%}
+          </a>
+        {%- endif -%}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+
+  </div>
+
+  {%- comment -%} ── Central content blocks ── {%- endcomment -%}
+  <div class="parallasse__content">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+
+        {%- when 'heading' -%}
+          <h2
+            class="parallasse__heading {{ block.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {{- block.settings.heading -}}
+          </h2>
+
+        {%- when 'text' -%}
+          <div
+            class="parallasse__text rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.text }}
+          </div>
+
+        {%- when 'button' -%}
+          {%- unless block.settings.button_label == blank -%}
+            <div
+              class="parallasse__button-wrap{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              <a
+                href="{{ block.settings.button_link | default: '#' }}"
+                class="button {% if block.settings.button_style == 'secondary' %}button--secondary{% else %}button--primary{% endif %}"
+              >
+                {{- block.settings.button_label -}}
+              </a>
+            </div>
+          {%- endunless -%}
+
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} ── Scroll-down arrow ── {%- endcomment -%}
+  <button class="parallasse__scroll-cta" aria-label="{{ 'sections.sezione-parallasse.scroll_down' | t }}" onclick="window.scrollBy({top: window.innerHeight, behavior: 'smooth'})">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+
+</div>
+
+<script>
+  (function () {
+    var sectionEl = document.getElementById('Parallasse-{{ section.id }}');
+    if (!sectionEl) return;
+
+    var leftEl   = document.getElementById('ParaLeft-{{ section.id }}');
+    var rightEl  = document.getElementById('ParaRight-{{ section.id }}');
+    var maxRot   = parseFloat(sectionEl.getAttribute('data-max-rotation')) || 0;
+    var maxShift = 180; /* px: how far below final position the images start */
+    var ticking  = false;
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function update() {
+      var rect = sectionEl.getBoundingClientRect();
+      var vpH  = window.innerHeight;
+
+      /*
+       * progress: 0 = section just entered viewport (bottom edge at viewport bottom)
+       *           1 = section fully traversed (top edge at viewport top)
+       * Images finish rising once progress reaches ~0.4 (section half in view).
+       */
+      var totalTravel = vpH + rect.height;
+      var traveled    = vpH - rect.top;
+      var progress    = traveled / totalTravel;
+      progress = Math.max(0, Math.min(1, progress));
+
+      var riseT = Math.min(1, progress / 0.4);
+      riseT = easeOutCubic(riseT);
+
+      var shift = maxShift * (1 - riseT);
+
+      if (leftEl)  leftEl.style.transform  = 'translateY(' + shift + 'px) rotate(' + (-maxRot) + 'deg)';
+      if (rightEl) rightEl.style.transform = 'translateY(' + shift + 'px) rotate(' + maxRot + 'deg)';
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    /* Initial call: if section already in viewport on load */
+    update();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.sezione-parallasse.name",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 3,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "t:sections.sezione-parallasse.settings.text_align.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.sezione-parallasse.settings.text_align.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.sezione-parallasse.settings.text_align.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.sezione-parallasse.settings.text_align.options__3.label"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sezione-parallasse.settings.header_images.content"
+    },
+    {
+      "type": "range",
+      "id": "max_rotation",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "deg",
+      "label": "t:sections.sezione-parallasse.settings.max_rotation.label",
+      "default": 10
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "t:sections.sezione-parallasse.settings.image_1.label"
+    },
+    {
+      "type": "url",
+      "id": "image_1_link",
+      "label": "t:sections.sezione-parallasse.settings.image_1_link.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "t:sections.sezione-parallasse.settings.image_2.label"
+    },
+    {
+      "type": "url",
+      "id": "image_2_link",
+      "label": "t:sections.sezione-parallasse.settings.image_2_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video-acquistabile.settings.header_colors.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.video-acquistabile.settings.colors_note.content"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.video-acquistabile.settings.text_color.label"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:sections.video-acquistabile.settings.bg_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.sezione-parallasse.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "t:sections.sezione-parallasse.blocks.heading.settings.heading.default",
+          "label": "t:sections.sezione-parallasse.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sections.all.heading_size.label",
+          "options": [
+            { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+            { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+            { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" },
+            { "value": "hxl", "label": "t:sections.all.heading_size.options__4.label" },
+            { "value": "hxxl", "label": "t:sections.all.heading_size.options__5.label" }
+          ],
+          "default": "h1"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.sezione-parallasse.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "t:sections.sezione-parallasse.blocks.text.settings.text.default",
+          "label": "t:sections.sezione-parallasse.blocks.text.settings.text.label"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.sezione-parallasse.blocks.button.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "t:sections.sezione-parallasse.blocks.button.settings.button_label.default",
+          "label": "t:sections.sezione-parallasse.blocks.button.settings.button_label.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.sezione-parallasse.blocks.button.settings.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "t:sections.sezione-parallasse.blocks.button.settings.button_style.label",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:sections.sezione-parallasse.blocks.button.settings.button_style.options__1.label"
+            },
+            {
+              "value": "secondary",
+              "label": "t:sections.sezione-parallasse.blocks.button.settings.button_style.options__2.label"
+            }
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.sezione-parallasse.name",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

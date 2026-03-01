@@ -336,6 +336,9 @@
     "testo-arricchito-immagine": {
       "empty": "Aggiungi un blocco sottotitolo o testo per iniziare."
     },
+    "sezione-parallasse": {
+      "scroll_down": "Scorri verso il basso"
+    },
     "bobine-video-acquistabili": {
       "prev": "Prodotto precedente",
       "next": "Prodotto successivo",

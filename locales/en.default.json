@@ -334,6 +334,9 @@
     "testo-arricchito-immagine": {
       "empty": "Add a subtitle or text block to get started."
     },
+    "sezione-parallasse": {
+      "scroll_down": "Scroll down"
+    },
     "bobine-video-acquistabili": {
       "prev": "Previous product",
       "next": "Next product",

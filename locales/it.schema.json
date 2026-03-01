@@ -1494,6 +1494,75 @@
         "name": "Immagine con prodotti"
       }
     },
+    "sezione-parallasse": {
+      "name": "Sezione Parallasse",
+      "settings": {
+        "text_align": {
+          "label": "Allineamento del testo",
+          "options__1": { "label": "Sinistra" },
+          "options__2": { "label": "Centro" },
+          "options__3": { "label": "Destra" }
+        },
+        "header_images": {
+          "content": "Immagini"
+        },
+        "max_rotation": {
+          "label": "Rotazione massima"
+        },
+        "image_1": {
+          "label": "Prima immagine"
+        },
+        "image_1_link": {
+          "label": "Link della prima immagine"
+        },
+        "image_2": {
+          "label": "Seconda immagine"
+        },
+        "image_2_link": {
+          "label": "Link della seconda immagine"
+        }
+      },
+      "blocks": {
+        "heading": {
+          "name": "Intestazione",
+          "settings": {
+            "heading": {
+              "label": "Intestazione",
+              "default": "Where Every Skincare Moment Counts."
+            }
+          }
+        },
+        "text": {
+          "name": "Testo",
+          "settings": {
+            "text": {
+              "label": "Testo",
+              "default": "<p>At Beauty, we believe that skincare isn't just a routine; it's a journey of self-care and self-discovery.</p>"
+            }
+          }
+        },
+        "button": {
+          "name": "Pulsante",
+          "settings": {
+            "button_label": {
+              "label": "Etichetta pulsante",
+              "default": "Acquista ora"
+            },
+            "button_link": {
+              "label": "Link pulsante"
+            },
+            "button_style": {
+              "label": "Stile pulsante",
+              "options__1": { "label": "Primario" },
+              "options__2": { "label": "Secondario" }
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Sezione Parallasse"
+      }
+    },
     "bobine-video-acquistabili": {
       "name": "Bobine video acquistabili",
       "settings": {

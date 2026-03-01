@@ -1649,6 +1649,75 @@
         "name": "Image with products"
       }
     },
+    "sezione-parallasse": {
+      "name": "Parallax Section",
+      "settings": {
+        "text_align": {
+          "label": "Text alignment",
+          "options__1": { "label": "Left" },
+          "options__2": { "label": "Center" },
+          "options__3": { "label": "Right" }
+        },
+        "header_images": {
+          "content": "Images"
+        },
+        "max_rotation": {
+          "label": "Maximum rotation"
+        },
+        "image_1": {
+          "label": "First image"
+        },
+        "image_1_link": {
+          "label": "First image link"
+        },
+        "image_2": {
+          "label": "Second image"
+        },
+        "image_2_link": {
+          "label": "Second image link"
+        }
+      },
+      "blocks": {
+        "heading": {
+          "name": "Heading",
+          "settings": {
+            "heading": {
+              "label": "Heading",
+              "default": "Where Every Skincare Moment Counts."
+            }
+          }
+        },
+        "text": {
+          "name": "Text",
+          "settings": {
+            "text": {
+              "label": "Text",
+              "default": "<p>At Beauty, we believe that skincare isn't just a routine; it's a journey of self-care and self-discovery.</p>"
+            }
+          }
+        },
+        "button": {
+          "name": "Button",
+          "settings": {
+            "button_label": {
+              "label": "Button label",
+              "default": "Shop now"
+            },
+            "button_link": {
+              "label": "Button link"
+            },
+            "button_style": {
+              "label": "Button style",
+              "options__1": { "label": "Primary" },
+              "options__2": { "label": "Secondary" }
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Parallax Section"
+      }
+    },
     "bobine-video-acquistabili": {
       "name": "Shoppable Video Reels",
       "settings": {
