@@ -1649,6 +1649,81 @@
         "name": "Image with products"
       }
     },
+    "video-acquistabile": {
+      "name": "Shoppable Video",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "header_general": {
+          "content": "General"
+        },
+        "full_width": {
+          "label": "Make section full width"
+        },
+        "enable_quick_add": {
+          "label": "Enable quick add button"
+        },
+        "enable_rewind": {
+          "label": "Enable rewind button on desktop"
+        },
+        "hide_vendor": {
+          "label": "Hide brand name"
+        },
+        "header_video": {
+          "content": "Shopify-hosted video"
+        },
+        "video": {
+          "label": "A Shopify-hosted video"
+        },
+        "show_mute_button": {
+          "label": "Show custom unmute/mute button"
+        },
+        "header_height": {
+          "content": "Section height"
+        },
+        "height_desktop": {
+          "label": "Fixed desktop height"
+        },
+        "height_mobile": {
+          "label": "Fixed mobile height"
+        },
+        "fullscreen_mode": {
+          "label": "Enable fullscreen mode"
+        },
+        "header_colors": {
+          "content": "Colors"
+        },
+        "colors_note": {
+          "content": "'Transparent' is the default value and inherits from global settings."
+        },
+        "heading_color": {
+          "label": "Heading color"
+        },
+        "bg_color": {
+          "label": "Background color"
+        },
+        "bg_opacity": {
+          "label": "Background opacity"
+        },
+        "text_color": {
+          "label": "Text color"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Product",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Shoppable Video"
+      }
+    },
     "multirow": {
       "name": "Multirow",
       "settings": {

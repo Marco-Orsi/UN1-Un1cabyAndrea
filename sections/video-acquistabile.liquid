@@ -1,0 +1,506 @@
+{{ 'section-video-acquistabile.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.enable_quick_add -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- liquid
+  assign bg_opacity_decimal = section.settings.bg_opacity | divided_by: 100.0
+  assign bg_color_final = section.settings.bg_color | color_modify: 'alpha', bg_opacity_decimal
+  assign product_blocks = section.blocks | where: 'type', 'product'
+  assign products_count = product_blocks.size
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #VideoAcquistabile-{{ section.id }} {
+    background-color: {{ bg_color_final }};
+    --va-heading-color: {{ section.settings.heading_color }};
+    --va-text-color: {{ section.settings.text_color }};
+    --va-height-desktop: {{ section.settings.height_desktop }}px;
+    --va-height-mobile: {{ section.settings.height_mobile }}px;
+  }
+{%- endstyle -%}
+
+<div
+  id="VideoAcquistabile-{{ section.id }}"
+  class="video-acquistabile section-{{ section.id }}-padding{% unless section.settings.full_width %} page-width video-acquistabile--contained{% endunless %}"
+>
+  {%- unless section.settings.heading == blank -%}
+    <div class="video-acquistabile__header{% if section.settings.full_width %} page-width{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <h2
+        class="video-acquistabile__heading"
+        style="color: var(--va-heading-color);"
+      >
+        {{- section.settings.heading -}}
+      </h2>
+    </div>
+  {%- endunless -%}
+
+  <div
+    class="video-acquistabile__media-wrap{% if section.settings.fullscreen_mode %} video-acquistabile__media-wrap--fullscreen{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  >
+    {%- comment -%} Background video {%- endcomment -%}
+    {%- if section.settings.video != blank -%}
+      <div class="video-acquistabile__video-container">
+        {{
+          section.settings.video
+          | video_tag:
+            image_size: '1100x',
+            autoplay: true,
+            loop: true,
+            controls: false,
+            muted: true,
+            class: 'video-acquistabile__video'
+        }}
+      </div>
+    {%- else -%}
+      <div class="video-acquistabile__video-placeholder">
+        {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Pause / Play button {%- endcomment -%}
+    <button
+      class="video-acquistabile__ctrl-btn video-acquistabile__pause-btn"
+      aria-label="{{ 'sections.video-acquistabile.pause' | t }}"
+      data-va-id="VideoAcquistabile-{{ section.id }}"
+    >
+      <span class="video-acquistabile__pause-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+          <rect x="1" y="1" width="3.5" height="10" rx="1"/>
+          <rect x="7.5" y="1" width="3.5" height="10" rx="1"/>
+        </svg>
+      </span>
+      <span class="video-acquistabile__play-icon" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+          <path d="M1.5 1.5l9 4.5-9 4.5V1.5z"/>
+        </svg>
+      </span>
+    </button>
+
+    {%- comment -%} Mute / Unmute button {%- endcomment -%}
+    {%- if section.settings.show_mute_button -%}
+      <button
+        class="video-acquistabile__ctrl-btn video-acquistabile__mute-btn"
+        aria-label="{{ 'sections.video-acquistabile.unmute' | t }}"
+        data-va-id="VideoAcquistabile-{{ section.id }}"
+      >
+        <span class="video-acquistabile__muted-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+        </span>
+        <span class="video-acquistabile__unmuted-icon" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+        </span>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Rewind button – desktop only {%- endcomment -%}
+    {%- if section.settings.enable_rewind -%}
+      <button
+        class="video-acquistabile__ctrl-btn video-acquistabile__rewind-btn large-up-show"
+        aria-label="{{ 'sections.video-acquistabile.rewind' | t }}"
+        data-va-id="VideoAcquistabile-{{ section.id }}"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+        </svg>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Product cards overlay (bottom-right) {%- endcomment -%}
+    {%- if products_count > 0 -%}
+      <div
+        class="video-acquistabile__products"
+        data-products-count="{{ products_count }}"
+      >
+        {%- for block in product_blocks -%}
+          {%- assign card_product = block.settings.product -%}
+          <div
+            class="video-acquistabile__product-card{% if forloop.index > 1 %} video-acquistabile__product-card--hidden{% endif %}"
+            data-product-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if card_product != blank -%}
+              <a
+                href="{{ card_product.url }}"
+                class="video-acquistabile__product-image"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                {%- if card_product.featured_media -%}
+                  {{
+                    card_product.featured_media
+                    | image_url: width: 120
+                    | image_tag:
+                      widths: '60, 80, 120',
+                      loading: 'lazy',
+                      alt: card_product.featured_media.alt
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </a>
+
+              <div class="video-acquistabile__product-info">
+                {%- unless section.settings.hide_vendor -%}
+                  <span
+                    class="video-acquistabile__product-vendor"
+                    style="color: var(--va-text-color);"
+                  >
+                    {{- card_product.vendor -}}
+                  </span>
+                {%- endunless -%}
+                <a
+                  href="{{ card_product.url }}"
+                  class="video-acquistabile__product-title"
+                  style="color: var(--va-text-color);"
+                >
+                  {{- card_product.title | truncate: 32 -}}
+                </a>
+                <span
+                  class="video-acquistabile__product-price"
+                  style="color: var(--va-text-color);"
+                >
+                  {{- card_product.price | money -}}
+                </span>
+              </div>
+
+              {%- if section.settings.enable_quick_add -%}
+                <div class="video-acquistabile__product-action">
+                  {%- if card_product.variants.size == 1 and card_product.available -%}
+                    <button
+                      type="button"
+                      class="video-acquistabile__quick-add-btn"
+                      data-product-id="{{ card_product.id }}"
+                      data-variant-id="{{ card_product.selected_or_first_available_variant.id }}"
+                      aria-label="{{ 'products.product.add_to_cart' | t }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </button>
+                  {%- else -%}
+                    <a
+                      href="{{ card_product.url }}"
+                      class="video-acquistabile__quick-add-btn"
+                      aria-label="{{ 'sections.video-acquistabile.view_product' | t }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+            {%- else -%}
+              <div class="video-acquistabile__product-image">
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+              <div class="video-acquistabile__product-info">
+                {%- unless section.settings.hide_vendor -%}
+                  <span class="video-acquistabile__product-vendor">BRAND</span>
+                {%- endunless -%}
+                <span class="video-acquistabile__product-title">Title</span>
+                <span class="video-acquistabile__product-price">€0,00</span>
+              </div>
+              {%- if section.settings.enable_quick_add -%}
+                <div class="video-acquistabile__product-action">
+                  <span class="video-acquistabile__quick-add-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                      <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                  </span>
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var sectionEl = document.getElementById('VideoAcquistabile-{{ section.id }}');
+    if (!sectionEl) return;
+
+    var video = sectionEl.querySelector('.video-acquistabile__video');
+    var pauseBtn = sectionEl.querySelector('.video-acquistabile__pause-btn');
+    var muteBtn = sectionEl.querySelector('.video-acquistabile__mute-btn');
+    var rewindBtn = sectionEl.querySelector('.video-acquistabile__rewind-btn');
+    var productsContainer = sectionEl.querySelector('.video-acquistabile__products');
+
+    if (pauseBtn && video) {
+      pauseBtn.addEventListener('click', function () {
+        var pauseIcon = pauseBtn.querySelector('.video-acquistabile__pause-icon');
+        var playIcon = pauseBtn.querySelector('.video-acquistabile__play-icon');
+        if (video.paused) {
+          video.play();
+          pauseIcon.hidden = false;
+          playIcon.hidden = true;
+        } else {
+          video.pause();
+          pauseIcon.hidden = true;
+          playIcon.hidden = false;
+        }
+      });
+    }
+
+    if (muteBtn && video) {
+      muteBtn.addEventListener('click', function () {
+        var mutedIcon = muteBtn.querySelector('.video-acquistabile__muted-icon');
+        var unmutedIcon = muteBtn.querySelector('.video-acquistabile__unmuted-icon');
+        video.muted = !video.muted;
+        if (video.muted) {
+          mutedIcon.hidden = false;
+          unmutedIcon.hidden = true;
+        } else {
+          mutedIcon.hidden = true;
+          unmutedIcon.hidden = false;
+        }
+      });
+    }
+
+    if (rewindBtn && video) {
+      rewindBtn.addEventListener('click', function () {
+        video.currentTime = 0;
+        video.play();
+      });
+    }
+
+    if (productsContainer) {
+      var cards = productsContainer.querySelectorAll('.video-acquistabile__product-card');
+      if (cards.length > 1) {
+        var currentIndex = 0;
+        setInterval(function () {
+          cards[currentIndex].classList.add('video-acquistabile__product-card--hidden');
+          currentIndex = (currentIndex + 1) % cards.length;
+          cards[currentIndex].classList.remove('video-acquistabile__product-card--hidden');
+        }, 4000);
+      }
+    }
+
+    sectionEl.querySelectorAll('.video-acquistabile__quick-add-btn[data-variant-id]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var variantId = btn.getAttribute('data-variant-id');
+        btn.classList.add('video-acquistabile__quick-add-btn--loading');
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        })
+          .then(function () {
+            btn.classList.remove('video-acquistabile__quick-add-btn--loading');
+            btn.classList.add('video-acquistabile__quick-add-btn--added');
+            setTimeout(function () {
+              btn.classList.remove('video-acquistabile__quick-add-btn--added');
+            }, 2000);
+          })
+          .catch(function () {
+            btn.classList.remove('video-acquistabile__quick-add-btn--loading');
+          });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.video-acquistabile.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.video-acquistabile.settings.header_general.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Headline",
+      "label": "t:sections.video-acquistabile.settings.heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.video-acquistabile.settings.full_width.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "t:sections.video-acquistabile.settings.enable_quick_add.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rewind",
+      "label": "t:sections.video-acquistabile.settings.enable_rewind.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_vendor",
+      "label": "t:sections.video-acquistabile.settings.hide_vendor.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video-acquistabile.settings.header_video.content"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.video-acquistabile.settings.video.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mute_button",
+      "label": "t:sections.video-acquistabile.settings.show_mute_button.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video-acquistabile.settings.header_height.content"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 300,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "label": "t:sections.video-acquistabile.settings.height_desktop.label",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "t:sections.video-acquistabile.settings.height_mobile.label",
+      "default": 600
+    },
+    {
+      "type": "checkbox",
+      "id": "fullscreen_mode",
+      "label": "t:sections.video-acquistabile.settings.fullscreen_mode.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video-acquistabile.settings.header_colors.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.video-acquistabile.settings.colors_note.content"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:sections.video-acquistabile.settings.heading_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:sections.video-acquistabile.settings.bg_color.label",
+      "default": "#FAECE6"
+    },
+    {
+      "type": "range",
+      "id": "bg_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:sections.video-acquistabile.settings.bg_opacity.label",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.video-acquistabile.settings.text_color.label",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.video-acquistabile.blocks.product.name",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.featured_product.settings.product.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.video-acquistabile.name"
+    }
+  ]
+}
+{% endschema %}

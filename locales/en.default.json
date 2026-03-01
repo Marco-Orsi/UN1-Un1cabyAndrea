@@ -334,6 +334,15 @@
     "testo-arricchito-immagine": {
       "empty": "Add a subtitle or text block to get started."
     },
+    "video-acquistabile": {
+      "pause": "Pause video",
+      "play": "Play video",
+      "unmute": "Unmute video",
+      "mute": "Mute video",
+      "rewind": "Restart video",
+      "view_product": "View product",
+      "empty": "Add product blocks to display shoppable cards on the video."
+    },
     "collection_list": {
       "view_all": "View all"
     },

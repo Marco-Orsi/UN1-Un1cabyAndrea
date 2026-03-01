@@ -336,6 +336,15 @@
     "testo-arricchito-immagine": {
       "empty": "Aggiungi un blocco sottotitolo o testo per iniziare."
     },
+    "video-acquistabile": {
+      "pause": "Metti in pausa il video",
+      "play": "Riproduci il video",
+      "unmute": "Attiva audio video",
+      "mute": "Disattiva audio video",
+      "rewind": "Riavvolgi il video",
+      "view_product": "Visualizza prodotto",
+      "empty": "Aggiungi blocchi prodotto per visualizzare schede acquistabili sul video."
+    },
     "collection_list": {
       "view_all": "Visualizza tutto"
     },

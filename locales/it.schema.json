@@ -1494,6 +1494,81 @@
         "name": "Immagine con prodotti"
       }
     },
+    "video-acquistabile": {
+      "name": "Video Acquistabile",
+      "settings": {
+        "heading": {
+          "label": "Intestazione"
+        },
+        "header_general": {
+          "content": "Generale"
+        },
+        "full_width": {
+          "label": "Rendi la sezione a larghezza piena"
+        },
+        "enable_quick_add": {
+          "label": "Abilita il pulsante di aggiunta rapida"
+        },
+        "enable_rewind": {
+          "label": "Abilita il pulsante di riavvolgimento sul desktop"
+        },
+        "hide_vendor": {
+          "label": "Nascondi il nome del marchio"
+        },
+        "header_video": {
+          "content": "Video ospitato da Shopify"
+        },
+        "video": {
+          "label": "Video ospitato da Shopify"
+        },
+        "show_mute_button": {
+          "label": "Mostra pulsante muto/non muto personalizzato"
+        },
+        "header_height": {
+          "content": "Altezza della sezione"
+        },
+        "height_desktop": {
+          "label": "Altezza fissa desktop"
+        },
+        "height_mobile": {
+          "label": "Altezza fissa mobile"
+        },
+        "fullscreen_mode": {
+          "label": "Abilita la modalità a schermo intero"
+        },
+        "header_colors": {
+          "content": "Colori"
+        },
+        "colors_note": {
+          "content": "Il valore 'Trasparente' è il valore predefinito e successivamente eredita il valore dalle impostazioni globali."
+        },
+        "heading_color": {
+          "label": "Colore dell'intestazione"
+        },
+        "bg_color": {
+          "label": "Colore dello sfondo"
+        },
+        "bg_opacity": {
+          "label": "Opacità dello sfondo"
+        },
+        "text_color": {
+          "label": "Colore del testo"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Product",
+          "settings": {
+            "product": {
+              "label": "Prodotto"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Video Acquistabile"
+      }
+    },
     "main-article": {
       "name": "Articolo del blog",
       "blocks": {
