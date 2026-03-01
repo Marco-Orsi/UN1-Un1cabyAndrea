@@ -1530,6 +1530,9 @@
           "settings": {
             "product": {
               "label": "Prodotto"
+            },
+            "video": {
+              "label": "Video"
             }
           }
         }
