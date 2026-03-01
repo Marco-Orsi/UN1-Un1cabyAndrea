@@ -137,7 +137,13 @@
     var leftEl   = document.getElementById('ParaLeft-{{ section.id }}');
     var rightEl  = document.getElementById('ParaRight-{{ section.id }}');
     var maxRot   = parseFloat(sectionEl.getAttribute('data-max-rotation')) || 0;
-    var maxShift = 180; /* px: how far below final position the images start */
+    /*
+     * maxShift: how many px below final position the images start.
+     * Kept at 80px so images are still visible on load but noticeably lower.
+     * The rise completes after scrolling ~50% of the viewport height past the
+     * section's top edge.
+     */
+    var maxShift = 80;
     var ticking  = false;
 
     function easeOutCubic(t) {
@@ -149,19 +155,23 @@
       var vpH  = window.innerHeight;
 
       /*
-       * progress: 0 = section just entered viewport (bottom edge at viewport bottom)
-       *           1 = section fully traversed (top edge at viewport top)
-       * Images finish rising once progress reaches ~0.4 (section half in view).
+       * sectionOffsetY: how far the section top has scrolled above the
+       * viewport top (0 when section is flush with viewport top, increases
+       * as you scroll down). Negative when section is still below the fold.
+       *
+       * The old formula used (vpH - rect.top) / (vpH + rect.height) which
+       * gives ~0.5 on load for a 100svh section → animation already done.
+       * This direct approach is correct for scroll-within-section parallax.
        */
-      var totalTravel = vpH + rect.height;
-      var traveled    = vpH - rect.top;
-      var progress    = traveled / totalTravel;
-      progress = Math.max(0, Math.min(1, progress));
+      var sectionOffsetY = -rect.top;
 
-      var riseT = Math.min(1, progress / 0.4);
-      riseT = easeOutCubic(riseT);
+      /* Rise completes once you've scrolled half a viewport height into the section */
+      var riseDistance = vpH * 0.55;
+      var riseProgress = sectionOffsetY / riseDistance;
+      riseProgress = Math.max(0, Math.min(1, riseProgress));
 
-      var shift = maxShift * (1 - riseT);
+      var eased = easeOutCubic(riseProgress);
+      var shift = maxShift * (1 - eased);
 
       if (leftEl)  leftEl.style.transform  = 'translateY(' + shift + 'px) rotate(' + (-maxRot) + 'deg)';
       if (rightEl) rightEl.style.transform = 'translateY(' + shift + 'px) rotate(' + maxRot + 'deg)';
@@ -177,8 +187,16 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    /* Initial call: if section already in viewport on load */
+
+    /* Apply initial state immediately (no transition on first paint) */
+    if (leftEl)  leftEl.style.transition = 'none';
+    if (rightEl) rightEl.style.transition = 'none';
     update();
+    /* Re-enable smooth transition after first frame */
+    requestAnimationFrame(function () {
+      if (leftEl)  leftEl.style.transition = '';
+      if (rightEl) rightEl.style.transition = '';
+    });
   })();
 </script>
 

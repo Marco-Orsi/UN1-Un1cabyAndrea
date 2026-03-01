@@ -37,6 +37,8 @@
   pointer-events: auto;
   aspect-ratio: 3 / 4;
   background: #f0f0f0;
+  /* subtle transition so rAF updates appear perfectly smooth */
+  transition: transform 0.05s linear;
 }
 
 .parallasse__image img,
