@@ -85,7 +85,7 @@
                     block_video
                     | video_tag:
                       image_size: '600x',
-                      autoplay: forloop.first,
+                      autoplay: true,
                       loop: true,
                       controls: false,
                       muted: true,
@@ -304,16 +304,7 @@
 
     function updateUI() {
       slides.forEach(function (slide, i) {
-        var isActive = i === currentIndex;
-        slide.classList.toggle('bv-section__slide--active', isActive);
-        var video = slide.querySelector('.bv-section__video');
-        if (video) {
-          if (isActive) {
-            video.play().catch(function () {});
-          } else {
-            video.pause();
-          }
-        }
+        slide.classList.toggle('bv-section__slide--active', i === currentIndex);
       });
 
       infoCards.forEach(function (card, i) {
@@ -382,6 +373,10 @@
     });
 
     updateUI();
+
+    sectionEl.querySelectorAll('.bv-section__video').forEach(function (video) {
+      video.play().catch(function () {});
+    });
   })();
 </script>
 
