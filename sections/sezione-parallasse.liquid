@@ -137,44 +137,33 @@
     var leftEl   = document.getElementById('ParaLeft-{{ section.id }}');
     var rightEl  = document.getElementById('ParaRight-{{ section.id }}');
     var maxRot   = parseFloat(sectionEl.getAttribute('data-max-rotation')) || 0;
-    /*
-     * maxShift: how many px below final position the images start.
-     * Kept at 80px so images are still visible on load but noticeably lower.
-     * The rise completes after scrolling ~50% of the viewport height past the
-     * section's top edge.
-     */
-    var maxShift = 80;
-    var ticking  = false;
-
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
+    var ticking = false;
 
     function update() {
       var rect = sectionEl.getBoundingClientRect();
       var vpH  = window.innerHeight;
 
       /*
-       * sectionOffsetY: how far the section top has scrolled above the
-       * viewport top (0 when section is flush with viewport top, increases
-       * as you scroll down). Negative when section is still below the fold.
+       * progress: 0 = section top flush with viewport top (just started scrolling),
+       *           1 = section has scrolled out entirely.
+       * Images start BELOW the section (progress = 0 → translateY = +vpH, clipped)
+       * and rise through the section, exiting at the TOP (progress = 1 → translateY = negative).
        *
-       * The old formula used (vpH - rect.top) / (vpH + rect.height) which
-       * gives ~0.5 on load for a 100svh section → animation already done.
-       * This direct approach is correct for scroll-within-section parallax.
+       * Formula:  translateY = vpH * (1 - speed * progress)
+       *
+       * At progress 0   → translateY = +vpH  (image bottom enters from section bottom)
+       * At progress 0.5 → translateY = vpH/4 (image visible, center area of section)
+       * At progress 1   → translateY = negative (image has exited through section top)
+       *
+       * The two images use slightly different speeds (1.5 vs 1.4) for a depth effect.
        */
-      var sectionOffsetY = -rect.top;
+      var progress = -rect.top / vpH;
 
-      /* Rise completes once you've scrolled half a viewport height into the section */
-      var riseDistance = vpH * 0.55;
-      var riseProgress = sectionOffsetY / riseDistance;
-      riseProgress = Math.max(0, Math.min(1, riseProgress));
+      var shiftLeft  = vpH * (1.0 - 1.5 * progress);
+      var shiftRight = vpH * (1.1 - 1.4 * progress);
 
-      var eased = easeOutCubic(riseProgress);
-      var shift = maxShift * (1 - eased);
-
-      if (leftEl)  leftEl.style.transform  = 'translateY(' + shift + 'px) rotate(' + (-maxRot) + 'deg)';
-      if (rightEl) rightEl.style.transform = 'translateY(' + shift + 'px) rotate(' + maxRot + 'deg)';
+      if (leftEl)  leftEl.style.transform  = 'translateY(' + shiftLeft  + 'px) rotate(' + (-maxRot) + 'deg)';
+      if (rightEl) rightEl.style.transform = 'translateY(' + shiftRight + 'px) rotate(' + maxRot   + 'deg)';
 
       ticking = false;
     }

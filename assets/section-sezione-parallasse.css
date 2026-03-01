@@ -60,19 +60,19 @@
   background: #e8e8e8;
 }
 
-/* ── Left image: upper-left, initially tilted counter-clockwise ── */
+/* ── Left image: anchored to section top, JS drives vertical position ── */
 
 .parallasse__image--left {
   left: 2%;
-  top: 8%;
+  top: 0;
   transform-origin: center center;
 }
 
-/* ── Right image: lower-right, initially tilted clockwise ── */
+/* ── Right image: anchored to section top, JS drives vertical position ── */
 
 .parallasse__image--right {
   right: 2%;
-  bottom: 8%;
+  top: 0;
   transform-origin: center center;
 }
 
