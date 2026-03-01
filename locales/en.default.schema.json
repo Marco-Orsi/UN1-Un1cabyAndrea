@@ -1649,6 +1649,50 @@
         "name": "Image with products"
       }
     },
+    "bobine-video-acquistabili": {
+      "name": "Shoppable Video Reels",
+      "settings": {
+        "use_rich_text_heading": {
+          "label": "Use rich text field for heading",
+          "info": "Enables bold, italic, links, heading levels (H1-H6 for SEO), and dynamic content in the heading field."
+        },
+        "heading": {
+          "label": "Heading",
+          "default": "Best Skincare Products"
+        },
+        "enable_quick_add": {
+          "label": "Enable quick add button"
+        },
+        "hide_vendor": {
+          "label": "Hide brand name"
+        },
+        "show_play_pause": {
+          "label": "Show play/pause buttons"
+        },
+        "header_colors": {
+          "content": "Colors"
+        },
+        "text_color": {
+          "label": "Text color"
+        },
+        "bg_color": {
+          "label": "Background color"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Product",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Shoppable Video Reels"
+      }
+    },
     "video-acquistabile": {
       "name": "Shoppable Video",
       "settings": {

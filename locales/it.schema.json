@@ -1494,6 +1494,50 @@
         "name": "Immagine con prodotti"
       }
     },
+    "bobine-video-acquistabili": {
+      "name": "Bobine video acquistabili",
+      "settings": {
+        "use_rich_text_heading": {
+          "label": "Usa il campo testo ricco per l'intestazione",
+          "info": "Abilita grassetto, corsivo, link, livelli di titolo (H1-H6 per SEO) e contenuto dinamico nel campo intestazione."
+        },
+        "heading": {
+          "label": "Intestazione",
+          "default": "Best Skincare Products"
+        },
+        "enable_quick_add": {
+          "label": "Abilita il pulsante di aggiunta rapida"
+        },
+        "hide_vendor": {
+          "label": "Nascondi il nome del marchio"
+        },
+        "show_play_pause": {
+          "label": "Mostra pulsanti di riproduzione/pausa"
+        },
+        "header_colors": {
+          "content": "Colori"
+        },
+        "text_color": {
+          "label": "Colore del testo"
+        },
+        "bg_color": {
+          "label": "Colore dello sfondo"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Prodotto",
+          "settings": {
+            "product": {
+              "label": "Prodotto"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Bobine video acquistabili"
+      }
+    },
     "video-acquistabile": {
       "name": "Video Acquistabile",
       "settings": {

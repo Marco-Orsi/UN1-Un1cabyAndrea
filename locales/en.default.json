@@ -334,6 +334,12 @@
     "testo-arricchito-immagine": {
       "empty": "Add a subtitle or text block to get started."
     },
+    "bobine-video-acquistabili": {
+      "prev": "Previous product",
+      "next": "Next product",
+      "view_product": "View product",
+      "empty": "Add product blocks to display shoppable video reels."
+    },
     "video-acquistabile": {
       "pause": "Pause video",
       "play": "Play video",

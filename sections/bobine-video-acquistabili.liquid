@@ -1,0 +1,508 @@
+{{ 'section-bobine-video-acquistabili.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.enable_quick_add -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- liquid
+  assign product_blocks = section.blocks | where: 'type', 'product'
+  assign products_count = product_blocks.size
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #BobineVideo-{{ section.id }} {
+    {% if section.settings.bg_color != blank %}
+      background-color: {{ section.settings.bg_color }};
+    {% endif %}
+    {% if section.settings.text_color != blank %}
+      --bv-text-color: {{ section.settings.text_color }};
+    {% endif %}
+  }
+{%- endstyle -%}
+
+<div
+  id="BobineVideo-{{ section.id }}"
+  class="bv-section section-{{ section.id }}-padding"
+  data-section-id="{{ section.id }}"
+>
+  {%- comment -%} Heading {%- endcomment -%}
+  {%- unless section.settings.heading == blank and section.settings.heading_richtext == blank -%}
+    <div class="bv-section__heading-wrap page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      {%- if section.settings.use_rich_text_heading -%}
+        <div class="bv-section__heading rte">{{ section.settings.heading_richtext }}</div>
+      {%- else -%}
+        <h2 class="bv-section__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+  {%- endunless -%}
+
+  {%- if products_count > 0 -%}
+    {%- comment -%} Carousel outer {%- endcomment -%}
+    <div class="bv-section__carousel-outer">
+      {%- if products_count > 1 -%}
+        <button
+          class="bv-section__arrow bv-section__arrow--prev"
+          aria-label="{{ 'sections.bobine-video-acquistabili.prev' | t }}"
+          data-bv-prev
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      {%- endif -%}
+
+      <div class="bv-section__viewport" id="BvViewport-{{ section.id }}">
+        <ul
+          class="bv-section__track"
+          id="BvTrack-{{ section.id }}"
+          role="list"
+        >
+          {%- for block in product_blocks -%}
+            {%- assign card_product = block.settings.product -%}
+            {%- liquid
+              assign product_video = nil
+              if card_product != blank
+                for media in card_product.media
+                  if media.media_type == 'video'
+                    assign product_video = media
+                    break
+                  endif
+                endfor
+              endif
+            -%}
+            <li
+              class="bv-section__slide{% if forloop.first %} bv-section__slide--active{% endif %}"
+              data-slide-index="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              <div class="bv-section__slide-media">
+                {%- if card_product != blank -%}
+                  {%- if product_video != nil -%}
+                    <video
+                      class="bv-section__video"
+                      src="{{ product_video.sources[1].url | default: product_video.sources[0].url }}"
+                      loop
+                      muted
+                      playsinline
+                      preload="none"
+                      {% if forloop.first %}autoplay{% endif %}
+                    ></video>
+                  {%- elsif card_product.featured_media -%}
+                    {{
+                      card_product.featured_media
+                      | image_url: width: 600
+                      | image_tag:
+                        class: 'bv-section__img',
+                        loading: 'lazy',
+                        widths: '300, 400, 600',
+                        alt: card_product.featured_media.alt
+                    }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg bv-section__img' }}
+                  {%- endif -%}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg bv-section__img' }}
+                {%- endif -%}
+
+                {%- comment -%} Mute/unmute button {%- endcomment -%}
+                {%- if section.settings.show_play_pause and product_video != nil -%}
+                  <button
+                    class="bv-section__mute-btn"
+                    aria-label="{{ 'sections.video-acquistabile.unmute' | t }}"
+                    data-bv-mute
+                  >
+                    <span class="bv-section__muted-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <line x1="23" y1="9" x2="17" y2="15"/>
+                        <line x1="17" y1="9" x2="23" y2="15"/>
+                      </svg>
+                    </span>
+                    <span class="bv-section__unmuted-icon" hidden>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      </svg>
+                    </span>
+                  </button>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- if products_count > 1 -%}
+        <button
+          class="bv-section__arrow bv-section__arrow--next"
+          aria-label="{{ 'sections.bobine-video-acquistabili.next' | t }}"
+          data-bv-next
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Product info cards (one per product, shown for active slide) {%- endcomment -%}
+    <div class="bv-section__info-area page-width">
+      <div class="bv-section__info-wrap" id="BvInfo-{{ section.id }}">
+        {%- for block in product_blocks -%}
+          {%- assign card_product = block.settings.product -%}
+          <div
+            class="bv-section__info-card{% unless forloop.first %} bv-section__info-card--hidden{% endunless %}"
+            data-info-index="{{ forloop.index0 }}"
+          >
+            {%- if card_product != blank -%}
+              <a
+                href="{{ card_product.url }}"
+                class="bv-section__info-thumb"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                {%- if card_product.featured_media -%}
+                  {{
+                    card_product.featured_media
+                    | image_url: width: 120
+                    | image_tag:
+                      widths: '60, 80, 120',
+                      loading: 'lazy',
+                      alt: card_product.featured_media.alt
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </a>
+
+              <div class="bv-section__info-text">
+                {%- unless section.settings.hide_vendor -%}
+                  <span class="bv-section__info-vendor">{{ card_product.vendor }}</span>
+                {%- endunless -%}
+                <a href="{{ card_product.url }}" class="bv-section__info-title">
+                  {{- card_product.title | truncate: 36 -}}
+                </a>
+                <span class="bv-section__info-price">{{ card_product.price | money }}</span>
+              </div>
+
+              {%- if section.settings.enable_quick_add -%}
+                <div class="bv-section__info-action">
+                  {%- if card_product.variants.size == 1 and card_product.available -%}
+                    <button
+                      type="button"
+                      class="bv-section__quick-add-btn"
+                      data-product-id="{{ card_product.id }}"
+                      data-variant-id="{{ card_product.selected_or_first_available_variant.id }}"
+                      aria-label="{{ 'products.product.add_to_cart' | t }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </button>
+                  {%- else -%}
+                    <a
+                      href="{{ card_product.url }}"
+                      class="bv-section__quick-add-btn"
+                      aria-label="{{ 'sections.bobine-video-acquistabili.view_product' | t }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- else -%}
+              <div class="bv-section__info-thumb">
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+              <div class="bv-section__info-text">
+                {%- unless section.settings.hide_vendor -%}
+                  <span class="bv-section__info-vendor">BRAND</span>
+                {%- endunless -%}
+                <span class="bv-section__info-title">Title</span>
+                <span class="bv-section__info-price">€0,00</span>
+              </div>
+              {%- if section.settings.enable_quick_add -%}
+                <div class="bv-section__info-action">
+                  <span class="bv-section__quick-add-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                      <line x1="3" y1="6" x2="21" y2="6"/>
+                      <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                  </span>
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Pagination dots {%- endcomment -%}
+      {%- if products_count > 1 -%}
+        <div class="bv-section__dots" id="BvDots-{{ section.id }}" role="tablist">
+          {%- for block in product_blocks -%}
+            <button
+              class="bv-section__dot{% if forloop.first %} bv-section__dot--active{% endif %}"
+              data-dot-index="{{ forloop.index0 }}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ products_count }}"
+            ></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- else -%}
+    <div class="bv-section__empty page-width">
+      <p>{{ 'sections.bobine-video-acquistabili.empty' | t }}</p>
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+  (function () {
+    var sectionEl = document.getElementById('BobineVideo-{{ section.id }}');
+    if (!sectionEl) return;
+
+    var track = sectionEl.querySelector('.bv-section__track');
+    var viewport = sectionEl.querySelector('.bv-section__viewport');
+    var slides = Array.from(sectionEl.querySelectorAll('.bv-section__slide'));
+    var infoCards = Array.from(sectionEl.querySelectorAll('.bv-section__info-card'));
+    var dots = Array.from(sectionEl.querySelectorAll('.bv-section__dot'));
+    var prevBtn = sectionEl.querySelector('[data-bv-prev]');
+    var nextBtn = sectionEl.querySelector('[data-bv-next]');
+    var total = slides.length;
+    var currentIndex = 0;
+
+    if (!track || total === 0) return;
+
+    function getSlideWidth() {
+      return slides[0] ? slides[0].offsetWidth : 200;
+    }
+
+    function getGap() {
+      var style = window.getComputedStyle(track);
+      return parseFloat(style.gap) || 12;
+    }
+
+    function centerActiveSlide() {
+      var slideW = getSlideWidth();
+      var gap = getGap();
+      var step = slideW + gap;
+      var vpW = viewport.offsetWidth;
+      var offset = -(currentIndex * step) + vpW / 2 - slideW / 2;
+      track.style.transform = 'translateX(' + offset + 'px)';
+    }
+
+    function updateUI() {
+      slides.forEach(function (slide, i) {
+        var isActive = i === currentIndex;
+        slide.classList.toggle('bv-section__slide--active', isActive);
+        var video = slide.querySelector('.bv-section__video');
+        if (video) {
+          if (isActive) {
+            video.play().catch(function () {});
+          } else {
+            video.pause();
+          }
+        }
+      });
+
+      infoCards.forEach(function (card, i) {
+        card.classList.toggle('bv-section__info-card--hidden', i !== currentIndex);
+      });
+
+      dots.forEach(function (dot, i) {
+        var isActive = i === currentIndex;
+        dot.classList.toggle('bv-section__dot--active', isActive);
+        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      if (prevBtn) prevBtn.disabled = currentIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentIndex === total - 1;
+
+      centerActiveSlide();
+    }
+
+    function goTo(index) {
+      currentIndex = Math.max(0, Math.min(index, total - 1));
+      updateUI();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(currentIndex - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(currentIndex + 1); });
+
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        goTo(parseInt(dot.getAttribute('data-dot-index'), 10));
+      });
+    });
+
+    sectionEl.querySelectorAll('.bv-section__quick-add-btn[data-variant-id]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var variantId = btn.getAttribute('data-variant-id');
+        btn.classList.add('bv-section__quick-add-btn--loading');
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        }).then(function () {
+          btn.classList.remove('bv-section__quick-add-btn--loading');
+          btn.classList.add('bv-section__quick-add-btn--added');
+          setTimeout(function () { btn.classList.remove('bv-section__quick-add-btn--added'); }, 2000);
+        }).catch(function () {
+          btn.classList.remove('bv-section__quick-add-btn--loading');
+        });
+      });
+    });
+
+    sectionEl.querySelectorAll('[data-bv-mute]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var slide = btn.closest('.bv-section__slide');
+        var video = slide ? slide.querySelector('.bv-section__video') : null;
+        if (!video) return;
+        video.muted = !video.muted;
+        btn.querySelector('.bv-section__muted-icon').hidden = !video.muted;
+        btn.querySelector('.bv-section__unmuted-icon').hidden = video.muted;
+      });
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(centerActiveSlide, 100);
+    });
+
+    updateUI();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.bobine-video-acquistabili.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "use_rich_text_heading",
+      "label": "t:sections.bobine-video-acquistabili.settings.use_rich_text_heading.label",
+      "info": "t:sections.bobine-video-acquistabili.settings.use_rich_text_heading.info",
+      "default": false
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "t:sections.bobine-video-acquistabili.settings.heading.default",
+      "label": "t:sections.bobine-video-acquistabili.settings.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "heading_richtext",
+      "label": "t:sections.bobine-video-acquistabili.settings.heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "t:sections.bobine-video-acquistabili.settings.enable_quick_add.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_vendor",
+      "label": "t:sections.bobine-video-acquistabili.settings.hide_vendor.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_play_pause",
+      "label": "t:sections.bobine-video-acquistabili.settings.show_play_pause.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.bobine-video-acquistabili.settings.header_colors.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.video-acquistabile.settings.colors_note.content"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.bobine-video-acquistabili.settings.text_color.label"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:sections.bobine-video-acquistabili.settings.bg_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 68
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.bobine-video-acquistabili.blocks.product.name",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.featured_product.settings.product.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.bobine-video-acquistabili.name"
+    }
+  ]
+}
+{% endschema %}
