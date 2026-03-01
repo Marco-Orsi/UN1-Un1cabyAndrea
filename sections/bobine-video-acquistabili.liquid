@@ -272,71 +272,118 @@
     var sectionEl = document.getElementById('BobineVideo-{{ section.id }}');
     if (!sectionEl) return;
 
-    var track = sectionEl.querySelector('.bv-section__track');
-    var viewport = sectionEl.querySelector('.bv-section__viewport');
-    var slides = Array.from(sectionEl.querySelectorAll('.bv-section__slide'));
-    var infoCards = Array.from(sectionEl.querySelectorAll('.bv-section__info-card'));
-    var dots = Array.from(sectionEl.querySelectorAll('.bv-section__dot'));
-    var prevBtn = sectionEl.querySelector('[data-bv-prev]');
-    var nextBtn = sectionEl.querySelector('[data-bv-next]');
-    var total = slides.length;
-    var currentIndex = 0;
+    var track       = sectionEl.querySelector('.bv-section__track');
+    var viewport    = sectionEl.querySelector('.bv-section__viewport');
+    var realSlides  = Array.from(sectionEl.querySelectorAll('.bv-section__slide'));
+    var infoCards   = Array.from(sectionEl.querySelectorAll('.bv-section__info-card'));
+    var dots        = Array.from(sectionEl.querySelectorAll('.bv-section__dot'));
+    var prevBtn     = sectionEl.querySelector('[data-bv-prev]');
+    var nextBtn     = sectionEl.querySelector('[data-bv-next]');
+    var total       = realSlides.length;
 
     if (!track || total === 0) return;
 
-    function getSlideWidth() {
-      return slides[0] ? slides[0].offsetWidth : 200;
+    /* ── Infinite loop: clone CLONE_COUNT slides on each side ── */
+    var CLONE_COUNT = Math.min(3, total);
+
+    for (var c = 0; c < CLONE_COUNT; c++) {
+      var cloneHead = realSlides[total - 1 - c].cloneNode(true);
+      cloneHead.classList.remove('bv-section__slide--active');
+      cloneHead.setAttribute('data-clone', 'true');
+      track.insertBefore(cloneHead, track.firstChild);
     }
+    for (var d = 0; d < CLONE_COUNT; d++) {
+      var cloneTail = realSlides[d].cloneNode(true);
+      cloneTail.classList.remove('bv-section__slide--active');
+      cloneTail.setAttribute('data-clone', 'true');
+      track.appendChild(cloneTail);
+    }
+
+    /* allSlides includes clones; real slides start at index CLONE_COUNT */
+    var allSlides   = Array.from(track.querySelectorAll('.bv-section__slide'));
+    var realIndex   = 0;          /* 0-based index in real slides */
+    var visualIndex = CLONE_COUNT; /* position inside allSlides */
+    var transitioning = false;
 
     function getGap() {
-      var style = window.getComputedStyle(track);
-      return parseFloat(style.gap) || 12;
+      return parseFloat(window.getComputedStyle(track).gap) || 12;
     }
 
-    function centerActiveSlide() {
-      var slideW = getSlideWidth();
-      var gap = getGap();
-      var step = slideW + gap;
-      var vpW = viewport.offsetWidth;
-      var offset = -(currentIndex * step) + vpW / 2 - slideW / 2;
-      track.style.transform = 'translateX(' + offset + 'px)';
+    function computeOffset(vi) {
+      var slideW = allSlides[0].offsetWidth;
+      var step   = slideW + getGap();
+      return -(vi * step) + viewport.offsetWidth / 2 - slideW / 2;
     }
 
-    function updateUI() {
-      slides.forEach(function (slide, i) {
-        slide.classList.toggle('bv-section__slide--active', i === currentIndex);
-      });
+    function setTransform(vi, animated) {
+      if (!animated) track.style.transition = 'none';
+      track.style.transform = 'translateX(' + computeOffset(vi) + 'px)';
+      if (!animated) {
+        /* force reflow so the next transition re-enables smoothly */
+        track.getBoundingClientRect();
+        track.style.transition = '';
+      }
+    }
 
+    function updateInfoDots() {
       infoCards.forEach(function (card, i) {
-        card.classList.toggle('bv-section__info-card--hidden', i !== currentIndex);
+        card.classList.toggle('bv-section__info-card--hidden', i !== realIndex);
       });
-
       dots.forEach(function (dot, i) {
-        var isActive = i === currentIndex;
-        dot.classList.toggle('bv-section__dot--active', isActive);
-        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        var active = i === realIndex;
+        dot.classList.toggle('bv-section__dot--active', active);
+        dot.setAttribute('aria-selected', active ? 'true' : 'false');
       });
-
-      if (prevBtn) prevBtn.disabled = currentIndex === 0;
-      if (nextBtn) nextBtn.disabled = currentIndex === total - 1;
-
-      centerActiveSlide();
+      allSlides.forEach(function (slide) {
+        var idx = parseInt(slide.getAttribute('data-slide-index'), 10);
+        slide.classList.toggle('bv-section__slide--active', idx === realIndex);
+      });
     }
 
-    function goTo(index) {
-      currentIndex = Math.max(0, Math.min(index, total - 1));
-      updateUI();
+    function navigate(dir) {
+      if (transitioning) return;
+      transitioning = true;
+
+      visualIndex += dir;
+      realIndex = ((realIndex + dir) % total + total) % total;
+
+      updateInfoDots();
+      setTransform(visualIndex, true);
+
+      track.addEventListener('transitionend', function onEnd() {
+        track.removeEventListener('transitionend', onEnd);
+        /* silently jump to the real counterpart if we are in a clone zone */
+        if (visualIndex < CLONE_COUNT) {
+          visualIndex += total;
+          setTransform(visualIndex, false);
+        } else if (visualIndex >= CLONE_COUNT + total) {
+          visualIndex -= total;
+          setTransform(visualIndex, false);
+        }
+        transitioning = false;
+      });
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(currentIndex - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(currentIndex + 1); });
+    function goToReal(ri) {
+      realIndex   = ((ri % total) + total) % total;
+      visualIndex = CLONE_COUNT + realIndex;
+      updateInfoDots();
+      setTransform(visualIndex, true);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { navigate(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { navigate(1); });
+    /* arrows are always enabled for infinite loop */
+    if (prevBtn) prevBtn.disabled = false;
+    if (nextBtn) nextBtn.disabled = false;
 
     dots.forEach(function (dot) {
       dot.addEventListener('click', function () {
-        goTo(parseInt(dot.getAttribute('data-dot-index'), 10));
+        goToReal(parseInt(dot.getAttribute('data-dot-index'), 10));
       });
     });
 
+    /* ── Quick-add ── */
     sectionEl.querySelectorAll('.bv-section__quick-add-btn[data-variant-id]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var variantId = btn.getAttribute('data-variant-id');
@@ -355,27 +402,31 @@
       });
     });
 
-    sectionEl.querySelectorAll('[data-bv-mute]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var slide = btn.closest('.bv-section__slide');
-        var video = slide ? slide.querySelector('.bv-section__video') : null;
-        if (!video) return;
-        video.muted = !video.muted;
-        btn.querySelector('.bv-section__muted-icon').hidden = !video.muted;
-        btn.querySelector('.bv-section__unmuted-icon').hidden = video.muted;
-      });
+    /* ── Mute toggle ── */
+    track.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-bv-mute]');
+      if (!btn) return;
+      var video = btn.closest('.bv-section__slide').querySelector('.bv-section__video');
+      if (!video) return;
+      video.muted = !video.muted;
+      btn.querySelector('.bv-section__muted-icon').hidden   = !video.muted;
+      btn.querySelector('.bv-section__unmuted-icon').hidden =  video.muted;
     });
 
+    /* ── Resize ── */
     var resizeTimer;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(centerActiveSlide, 100);
+      resizeTimer = setTimeout(function () { setTransform(visualIndex, false); }, 100);
     });
 
-    updateUI();
+    /* ── Init ── */
+    updateInfoDots();
+    setTransform(visualIndex, false);
 
-    sectionEl.querySelectorAll('.bv-section__video').forEach(function (video) {
-      video.play().catch(function () {});
+    /* Play all videos (real + clones) */
+    track.querySelectorAll('.bv-section__video').forEach(function (v) {
+      v.play().catch(function () {});
     });
   })();
 </script>
