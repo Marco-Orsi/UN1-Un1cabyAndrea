@@ -314,7 +314,7 @@
       "name": "t:sections.image-with-products.presets.name",
       "settings": {
         "image": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
-        "image_height": "medium",
+        "image_height": "large",
         "heading": "HEADLINE",
         "heading_size": "h1",
         "heading_position_vertical": "bottom",
