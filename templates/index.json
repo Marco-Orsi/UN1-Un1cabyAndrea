@@ -212,15 +212,40 @@
     },
     "video_acquistabile_DHKYHA": {
       "type": "video-acquistabile",
+      "blocks": {
+        "product_FzRQdC": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_abXB6b": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3jK3ci": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_FzRQdC",
+        "product_abXB6b",
+        "product_3jK3ci"
+      ],
       "name": "t:sections.video-acquistabile.name",
       "settings": {
         "heading": "Headline",
         "full_width": false,
         "enable_quick_add": true,
-        "enable_rewind": false,
+        "enable_rewind": true,
         "hide_vendor": false,
         "video": "shopify://files/videos/7709461-uhd_4096_2160_25fps.mp4",
-        "show_mute_button": false,
+        "show_mute_button": true,
         "height_desktop": 700,
         "height_mobile": 600,
         "fullscreen_mode": false,
