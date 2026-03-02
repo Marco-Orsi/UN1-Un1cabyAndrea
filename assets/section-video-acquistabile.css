@@ -3,6 +3,9 @@
    ============================================================ */
 
 .video-acquistabile {
+  flex-direction: column;
+        align-items: center;
+        display: flex;
   position: relative;
 }
 
