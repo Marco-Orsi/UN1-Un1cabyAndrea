@@ -250,11 +250,35 @@
         "height_mobile": 600,
         "fullscreen_mode": false,
         "heading_color": "#000000",
-        "bg_color": "#FAECE6",
+        "bg_color": "#faece6",
         "bg_opacity": 100,
         "text_color": "#000000",
         "padding_top": 0,
         "padding_bottom": 36
+      }
+    },
+    "rich_text_wrVn4H": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_jkK4Yz": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>SEZIONE 4</strong>",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_jkK4Yz"
+      ],
+      "name": "Sezione 5",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     }
   },
@@ -266,6 +290,7 @@
     "rich_text_ejHpLh",
     "sezione_parallasse_FnU4LN",
     "rich_text_BPW4JC",
-    "video_acquistabile_DHKYHA"
+    "video_acquistabile_DHKYHA",
+    "rich_text_wrVn4H"
   ]
 }
