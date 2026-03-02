@@ -179,43 +179,43 @@
   flex-direction: column;
 }
 
-/* Override desktop slider's default large left-margin
-   (designed for full-page sliders, not 50% grid columns) */
+/* Products column: slider-component fills the full column */
 .image-with-products__slider {
-  --desktop-margin-left-first-item: 0;
-  position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  display: block;
   overflow: hidden;
 }
 
+/* Carousel list — fully custom, no Dawn grid classes */
 .image-with-products__list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 0;
+  /* hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* One product at a time — each slide fills the full column width */
-.image-with-products__list.slider .image-with-products__slide {
-  width: 100%;
-  min-width: 100%;
-  flex: 0 0 100%;
+.image-with-products__list::-webkit-scrollbar {
+  display: none;
 }
 
-/* Reset the extra margin-left injected by slider--desktop on the first slide */
-.image-with-products__list.slider--desktop .slider__slide:first-child {
-  margin-left: 0 !important;
-  scroll-margin-left: 0 !important;
-}
-
-.image-with-products__list.contains-card--product .card-wrapper {
-  height: 100%;
-}
-
+/* Each slide takes exactly the full width — one product at a time */
 .image-with-products__slide {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
   display: flex;
+}
+
+.image-with-products__slide .card-wrapper {
+  width: 100%;
 }
 
 .image-with-products__slider-buttons {
@@ -224,7 +224,6 @@
   justify-content: center;
   gap: 0.5rem;
   margin-top: 1.5rem;
-  flex-wrap: wrap;
 }
 
 .image-with-products__slider-buttons .slider-counter--dots {
@@ -242,13 +241,4 @@
 
 .image-with-products__empty .caption {
   margin: 0 0 0.5rem;
-}
-
-/* Mobile: full-width single slide */
-@media screen and (max-width: 749px) {
-  .image-with-products__list.slider .image-with-products__slide {
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-  }
 }
