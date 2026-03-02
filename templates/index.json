@@ -330,6 +330,82 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "rich_text_EYjQCz": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_Xcj3EH": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>SEZIONE 6</strong>",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_Xcj3EH"
+      ],
+      "name": "Sezione 5",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "bobine_video_acquistabili_PffUtA": {
+      "type": "bobine-video-acquistabili",
+      "blocks": {
+        "product_LGi3fC": {
+          "type": "product",
+          "settings": {
+            "product": "example-product-1",
+            "video": "shopify://files/videos/7709461-uhd_4096_2160_25fps.mp4"
+          }
+        },
+        "product_rGf4Fr": {
+          "type": "product",
+          "settings": {
+            "product": "example-product-1",
+            "video": "shopify://files/videos/7709461-uhd_4096_2160_25fps.mp4"
+          }
+        },
+        "product_GxNj3P": {
+          "type": "product",
+          "settings": {
+            "product": "example-product-1",
+            "video": "shopify://files/videos/7709461-uhd_4096_2160_25fps.mp4"
+          }
+        },
+        "product_J6fJTh": {
+          "type": "product",
+          "settings": {
+            "product": "example-product-1",
+            "video": "shopify://files/videos/7709461-uhd_4096_2160_25fps.mp4"
+          }
+        }
+      },
+      "block_order": [
+        "product_LGi3fC",
+        "product_rGf4Fr",
+        "product_GxNj3P",
+        "product_J6fJTh"
+      ],
+      "name": "t:sections.bobine-video-acquistabili.name",
+      "settings": {
+        "use_rich_text_heading": false,
+        "heading": "Best Skincare Products",
+        "heading_richtext": "",
+        "enable_quick_add": true,
+        "hide_vendor": false,
+        "show_play_pause": false,
+        "text_color": "",
+        "bg_color": "",
+        "padding_top": 60,
+        "padding_bottom": 68
+      }
     }
   },
   "order": [
@@ -342,6 +418,8 @@
     "rich_text_BPW4JC",
     "video_acquistabile_DHKYHA",
     "rich_text_wrVn4H",
-    "image_with_products_jLLKex"
+    "image_with_products_jLLKex",
+    "rich_text_EYjQCz",
+    "bobine_video_acquistabili_PffUtA"
   ]
 }
