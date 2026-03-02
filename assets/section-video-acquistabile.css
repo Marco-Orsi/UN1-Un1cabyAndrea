@@ -262,5 +262,5 @@
 }
 
 .video-acquistabile--contained .video-acquistabile__media-wrap {
-  border-radius: 0;
+  border-radius: 15px;
 }
