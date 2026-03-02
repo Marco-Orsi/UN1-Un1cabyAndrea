@@ -9,16 +9,41 @@
  */
 {
   "sections": {
-    "logo_banner_pLw8pY": {
+    "rich_text_GDT99L": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_zUkCmQ": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>SEZIONE 1</strong>",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_zUkCmQ"
+      ],
+      "name": "Sezione 1",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "logo_banner_WX9zDr": {
       "type": "logo-banner",
       "name": "t:sections.logo-banner.presets.name",
       "settings": {
         "media_type": "image",
-        "video_url": "",
+        "image": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
         "video_description": "",
+        "logo": "shopify://shop_images/logo.png",
         "logo_width_desktop": 80,
         "logo_width_mobile": 85,
-        "logo_final_scale": 15,
+        "logo_final_scale": 10,
         "logo_final_position": 100,
         "hero_height": 70,
         "overlay_opacity": 30,
@@ -27,148 +52,144 @@
         "padding_bottom": 0
       }
     },
-    "image_banner": {
-      "type": "image-banner",
+    "rich_text_iXhaGJ": {
+      "type": "rich-text",
       "blocks": {
-        "heading": {
+        "heading_jJ7PfX": {
           "type": "heading",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
-          }
-        },
-        "button": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "heading": "<strong>SEZIONE 2</strong>",
+            "heading_size": "h1"
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "heading_jJ7PfX"
       ],
+      "name": "Sezione 2",
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "image_behavior": "none",
-        "desktop_content_position": "bottom-center",
-        "desktop_content_alignment": "center",
-        "show_text_box": false,
-        "color_scheme": "scheme-3",
-        "stack_images_on_mobile": false,
-        "mobile_content_alignment": "center",
-        "show_text_below": false
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "collection": "all",
-        "products_to_show": 8,
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 44,
-        "padding_bottom": 36
-      }
-    },
-    "featured_product_nmtwUL": {
-      "type": "featured-product",
+    "testo_arricchito_immagine_dkLE4Q": {
+      "type": "testo-arricchito-immagine",
       "blocks": {
-        "text_wEjc7f": {
-          "type": "text",
+        "subtitle_kfP8hz": {
+          "type": "subtitle",
           "settings": {
-            "text": "{{ section.settings.product.vendor }}",
-            "text_style": "uppercase"
+            "subtitle": "Subtitle"
           }
         },
-        "title_WHPhbB": {
-          "type": "title",
+        "rich_text_Czhw3r": {
+          "type": "rich_text",
           "settings": {
+            "text": "<p>The harmony between powerful PICTURE1 high-performance ingredients PICTURE2 and exceptionally simple PICTURE3 skincare routines.</p>",
+            "text_transform": "none",
+            "hide_on_mobile": false,
+            "text_scale_desktop": 200,
+            "text_scale_mobile": 110,
+            "line_height": 1.7,
+            "image_1": "shopify://shop_images/5.png",
+            "image_1_link": "",
+            "image_2": "shopify://shop_images/7.png",
+            "image_2_link": "",
+            "image_3": "shopify://shop_images/6.png",
+            "image_3_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "subtitle_kfP8hz",
+        "rich_text_Czhw3r"
+      ],
+      "name": "t:sections.testo-arricchito-immagine.presets.name",
+      "settings": {
+        "background_image": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
+        "background_overlay_opacity": 0,
+        "color_scheme": "scheme-3",
+        "content_alignment": "center",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "rich_text_ejHpLh": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_HUWLHa": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>SEZIONE 3</strong>",
+            "heading_size": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "heading_HUWLHa"
+      ],
+      "name": "Sezione 3",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "sezione_parallasse_FnU4LN": {
+      "type": "sezione-parallasse",
+      "blocks": {
+        "heading_nytPDK": {
+          "type": "heading",
+          "settings": {
+            "heading": "Where Every Skincare Moment Counts.",
             "heading_size": "h1"
           }
         },
-        "price_NCmznj": {
-          "type": "price",
-          "settings": {}
-        },
-        "variant_picker_cXqM6w": {
-          "type": "variant_picker",
+        "text_x4UWf9": {
+          "type": "text",
           "settings": {
-            "picker_type": "button",
-            "swatch_shape": "circle"
+            "text": "<p>At Beauty, we believe that skincare isn't just a routine; it's a journey of self-care and self-discovery.</p>"
           }
         },
-        "quantity_selector_kmWHzV": {
-          "type": "quantity_selector",
-          "settings": {}
-        },
-        "buy_buttons_NEenFX": {
-          "type": "buy_buttons",
+        "button_wmamiH": {
+          "type": "button",
           "settings": {
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true
-          }
-        },
-        "share_d3bMec": {
-          "type": "share",
-          "settings": {
-            "share_label": "Share"
+            "button_label": "Shop now",
+            "button_link": "",
+            "button_style": "primary"
           }
         }
       },
       "block_order": [
-        "text_wEjc7f",
-        "title_WHPhbB",
-        "price_NCmznj",
-        "variant_picker_cXqM6w",
-        "quantity_selector_kmWHzV",
-        "buy_buttons_NEenFX",
-        "share_d3bMec"
+        "heading_nytPDK",
+        "text_x4UWf9",
+        "button_wmamiH"
       ],
-      "name": "t:sections.featured-product.presets.name",
+      "name": "t:sections.sezione-parallasse.name",
       "settings": {
-        "product": "",
-        "color_scheme": "",
-        "secondary_background": false,
-        "media_size": "medium",
-        "constrain_to_viewport": true,
-        "media_fit": "contain",
-        "media_position": "left",
-        "image_zoom": "lightbox",
-        "hide_variants": false,
-        "enable_video_looping": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "text_align": "center",
+        "max_rotation": 10,
+        "image_1_link": "",
+        "image_2_link": "",
+        "text_color": "",
+        "bg_color": "",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },
   "order": [
-    "logo_banner_pLw8pY",
-    "image_banner",
-    "featured_collection",
-    "featured_product_nmtwUL"
+    "rich_text_GDT99L",
+    "logo_banner_WX9zDr",
+    "rich_text_iXhaGJ",
+    "testo_arricchito_immagine_dkLE4Q",
+    "rich_text_ejHpLh",
+    "sezione_parallasse_FnU4LN"
   ]
 }
