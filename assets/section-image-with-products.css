@@ -177,21 +177,37 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 20rem;
 }
 
+/* Override desktop slider's default large left-margin
+   (designed for full-page sliders, not 50% grid columns) */
 .image-with-products__slider {
+  --desktop-margin-left-first-item: 0;
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .image-with-products__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 2rem;
+  gap: 0;
+}
+
+/* One product at a time — each slide fills the full column width */
+.image-with-products__list.slider .image-with-products__slide {
+  width: 100%;
+  min-width: 100%;
+  flex: 0 0 100%;
+}
+
+/* Reset the extra margin-left injected by slider--desktop on the first slide */
+.image-with-products__list.slider--desktop .slider__slide:first-child {
+  margin-left: 0 !important;
+  scroll-margin-left: 0 !important;
 }
 
 .image-with-products__list.contains-card--product .card-wrapper {
@@ -206,14 +222,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
   flex-wrap: wrap;
 }
 
-.image-with-products__slider-buttons .slider-counter {
-  min-width: 4rem;
-  text-align: center;
+.image-with-products__slider-buttons .slider-counter--dots {
+  display: flex;
+  align-items: center;
+  gap: 0;
 }
 
 .image-with-products__empty {
@@ -227,17 +244,11 @@
   margin: 0 0 0.5rem;
 }
 
-/* Mobile */
+/* Mobile: full-width single slide */
 @media screen and (max-width: 749px) {
-  .image-with-products__list.slider {
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
   .image-with-products__list.slider .image-with-products__slide {
-    min-width: 85%;
-    max-width: 85%;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
   }
 }
