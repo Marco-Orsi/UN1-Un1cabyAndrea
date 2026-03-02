@@ -54,10 +54,7 @@
           {%- endcomment -%}
           <div class="image-with-products__media-outer">
             <div
-              class="image-with-products__media-wrap image-with-products__media--{{ section.settings.image_height }} global-media-settings{% if section.settings.image != blank %} media{% else %} image-with-products__media--placeholder placeholder{% endif %}"
-              {% if section.settings.image_height == 'adapt' and section.settings.image != blank %}
-                style="padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;"
-              {% endif %}
+              class="image-with-products__media-wrap image-with-products__media--{{ section.settings.image_height }}{% if section.settings.image == blank %} image-with-products__media--placeholder{% endif %}"
             >
               {%- if section.settings.image != blank -%}
                 {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
@@ -124,7 +121,8 @@
                           show_rating: section.settings.show_rating,
                           skip_styles: skip_card_product_styles,
                           section_id: section.id,
-                          quick_add: section.settings.quick_add
+                          quick_add: section.settings.quick_add,
+                          extend_height: true
                         %}
                       </li>
                       {% assign skip_card_product_styles = true %}
@@ -335,7 +333,7 @@
           "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
         }
       ],
-      "default": "adapt",
+      "default": "square",
       "label": "t:sections.featured-collection.settings.image_ratio.label"
     },
     {

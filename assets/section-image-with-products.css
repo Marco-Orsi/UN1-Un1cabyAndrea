@@ -4,84 +4,97 @@
   margin-bottom: 0;
 }
 
-.image-with-products .grid__item {
-  position: relative;
-}
-
+/* Forza le colonne al 50% esatto (la formula gapless di Dawn ha uno scarto di 4px) */
 @media screen and (min-width: 750px) {
+  .image-with-products .image-with-products__grid > .grid__item {
+    width: 50%;
+  }
+
   .image-with-products__grid--reverse {
     flex-direction: row-reverse;
   }
 }
 
-/* Colonna immagine */
+/* ── Colonna immagine ─────────────────────────────────────────────────────── */
+
+/* align-self: start rimosso → la colonna si allunga per tutta l'altezza della riga */
 .image-with-products__media-item {
-  align-self: start;
   min-height: 0;
-  overflow: visible;
+  overflow: hidden;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Outer wrapper: position:relative così l'overlay si posiziona rispetto a questo,
-   NON dentro .media (che applica display:block a tutti i figli diretti via .media > *) */
+/* Outer wrapper: position:relative per l'overlay headline.
+   flex:1 fa sì che occupi tutta l'altezza disponibile nella colonna. */
 .image-with-products__media-outer {
   position: relative;
   width: 100%;
-  display: block;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Contenitore immagine */
+/* Il wrap occupa tutta l'altezza del media-outer */
 .image-with-products__media-wrap {
   position: relative;
   width: 100%;
-  min-height: 0;
+  flex: 1;
   overflow: hidden;
   border-radius: var(--media-radius, 0);
-  display: block;
 }
 
+/* Altezze fisse per le opzioni small/medium/large */
 .image-with-products__media-wrap.image-with-products__media--small {
-  height: 19.4rem;
+  min-height: 19.4rem;
 }
 
 .image-with-products__media-wrap.image-with-products__media--medium {
-  height: 29.6rem;
+  min-height: 29.6rem;
 }
 
 .image-with-products__media-wrap.image-with-products__media--large {
-  height: 43.5rem;
+  min-height: 43.5rem;
 }
 
 @media screen and (min-width: 750px) {
   .image-with-products__media-wrap.image-with-products__media--small {
-    height: 31.4rem;
+    min-height: 31.4rem;
   }
 
   .image-with-products__media-wrap.image-with-products__media--medium {
-    height: 46rem;
+    min-height: 46rem;
   }
 
   .image-with-products__media-wrap.image-with-products__media--large {
-    height: 69.5rem;
+    min-height: 69.5rem;
   }
 }
 
+/* Placeholder quando nessuna immagine è selezionata */
 .image-with-products__media-wrap.image-with-products__media--placeholder {
-  overflow: hidden;
   background: rgba(var(--color-foreground), 0.04);
-}
-
-.image-with-products__media-wrap.image-with-products__media--placeholder.image-with-products__media--adapt {
-  height: 20rem;
+  min-height: 20rem;
 }
 
 @media screen and (min-width: 750px) {
-  .image-with-products__media-wrap.image-with-products__media--placeholder.image-with-products__media--adapt {
-    height: 30rem;
+  .image-with-products__media-wrap.image-with-products__media--placeholder {
+    min-height: 30rem;
   }
 }
 
-.image-with-products__media--placeholder > svg {
+/* L'immagine copre tutto il contenitore */
+.image-with-products__media-wrap > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-with-products__media-wrap > svg {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -167,27 +180,36 @@
   text-align: right;
 }
 
-/* Colonna prodotti */
+/* ── Colonna prodotti ─────────────────────────────────────────────────────── */
+
+/* La colonna prodotti si allunga quanto la colonna immagine */
 .image-with-products__products-item {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
 }
 
+/* Il wrapper occupa tutta l'altezza della colonna */
 .image-with-products__products-wrapper {
+  flex: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* Products column: slider-component fills the full column */
+/* slider-component riempie tutta l'altezza disponibile */
 .image-with-products__slider {
+  flex: 1;
   width: 100%;
-  display: block;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* Carousel list — fully custom layout (slider--everywhere only used for Dawn button visibility) */
+/* Lista carousel: riempie l'altezza del slider, scorre orizzontalmente */
 .image-with-products__list {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -197,9 +219,9 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  /* override margin-bottom added by .slider--everywhere */
+  /* override margin-bottom aggiunto da .slider--everywhere */
   margin-bottom: 0;
-  /* hide scrollbar */
+  /* nascondi scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -208,24 +230,28 @@
   display: none;
 }
 
-/* Each slide takes exactly the full width — one product at a time */
+/* Ogni slide occupa esattamente tutta la larghezza e altezza della lista */
 .image-with-products__slide {
   flex: 0 0 100%;
   width: 100%;
+  min-width: 0;
   scroll-snap-align: start;
   display: flex;
 }
 
-.image-with-products__slide .card-wrapper {
+/* card-wrapper e card riempiono la slide */
+.image-with-products__slide .card-wrapper,
+.image-with-products__slide .card-wrapper .card {
   width: 100%;
 }
 
 .image-with-products__slider-buttons {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1.5rem;
+  padding: 1rem 0;
 }
 
 .image-with-products__slider-buttons .slider-counter--dots {
