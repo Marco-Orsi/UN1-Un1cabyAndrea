@@ -238,7 +238,7 @@
         "product_3jK3ci"
       ],
       "custom_css": [
-        "{background-color:#FAECE6 !important;}"
+        "{background-color: #faece6 !important;}"
       ],
       "name": "t:sections.video-acquistabile.name",
       "settings": {
@@ -266,7 +266,7 @@
         "heading_jkK4Yz": {
           "type": "heading",
           "settings": {
-            "heading": "<strong>SEZIONE 4</strong>",
+            "heading": "<strong>SEZIONE 5</strong>",
             "heading_size": "h1"
           }
         }
