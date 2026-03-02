@@ -41,7 +41,7 @@
 -%}
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
-  <div class="page-width" style="max-width:100%;">
+  <div class="page-width">
     <div class="image-with-products isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <div class="image-with-products__grid grid grid--gapless grid--1-col grid--2-col-tablet{% if section.settings.layout == 'image_right' %} image-with-products__grid--reverse{% endif %}">
         {%- comment -%} Colonna: immagine con headline in overlay (sopra in profondità) {%- endcomment -%}
