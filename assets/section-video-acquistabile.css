@@ -33,6 +33,7 @@
 
 @media screen and (min-width: 750px) {
   .video-acquistabile__media-wrap {
+    width: 95%;
     height: var(--va-height-desktop, 700px);
   }
 }
