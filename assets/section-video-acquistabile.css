@@ -18,6 +18,10 @@
   line-height: 1.2;
 }
 
+.video-acquistabile .page-width{
+  max-width:100% !important;
+}
+
 /* ── Media wrap (video container) ── */
 
 .video-acquistabile__media-wrap {
