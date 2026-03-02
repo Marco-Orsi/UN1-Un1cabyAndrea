@@ -320,7 +320,7 @@
         "heading_position_vertical": "bottom",
         "heading_position_horizontal": "left",
         "layout": "image_left",
-        "image_ratio": "square",
+        "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": true,
         "show_vendor": true,
