@@ -315,10 +315,10 @@
       "settings": {
         "image": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
         "image_height": "medium",
-        "heading": "",
+        "heading": "HEADLINE",
         "heading_size": "h1",
-        "heading_position_vertical": "center",
-        "heading_position_horizontal": "center",
+        "heading_position_vertical": "bottom",
+        "heading_position_horizontal": "left",
         "layout": "image_left",
         "image_ratio": "adapt",
         "image_shape": "default",
