@@ -186,7 +186,7 @@
   overflow: hidden;
 }
 
-/* Carousel list — fully custom, no Dawn grid classes */
+/* Carousel list — fully custom layout (slider--everywhere only used for Dawn button visibility) */
 .image-with-products__list {
   display: flex;
   flex-wrap: nowrap;
@@ -197,6 +197,8 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  /* override margin-bottom added by .slider--everywhere */
+  margin-bottom: 0;
   /* hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;

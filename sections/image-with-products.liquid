@@ -93,10 +93,10 @@
         <div class="image-with-products__products-item grid__item">
           <div class="image-with-products__products-wrapper">
             {%- if product_blocks.size > 0 -%}
-              <slider-component class="slider-mobile-gutter image-with-products__slider{% if show_slider %} image-with-products__slider--active{% endif %}">
+              <slider-component class="image-with-products__slider{% if show_slider %} image-with-products__slider--active{% endif %}">
                 <ul
                   id="Slider-{{ section.id }}"
-                  class="image-with-products__list grid grid--1-col contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %}{% if show_slider %} slider slider--tablet slider--mobile grid--peek{% endif %}"
+                  class="image-with-products__list contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %}{% if show_slider %} slider slider--everywhere{% endif %}"
                   role="list"
                   aria-label="{{ 'general.slider.name' | t }}"
                 >
@@ -111,7 +111,7 @@
                       {% endif %}
                       <li
                         id="Slide-{{ section.id }}-{{ block.id }}"
-                        class="image-with-products__slide grid__item{% if show_slider %} slider__slide{% endif %}"
+                        class="image-with-products__slide{% if show_slider %} slider__slide{% endif %}"
                         {{ block.shopify_attributes }}
                       >
                         {% render 'card-product',
@@ -144,11 +144,18 @@
                         {{- 'icon-caret.svg' | inline_asset_content -}}
                       </span>
                     </button>
-                    <div class="slider-counter caption">
-                      <span class="slider-counter--current">1</span>
-                      <span aria-hidden="true"> / </span>
-                      <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-                      <span class="slider-counter--total">{{ product_blocks.size }}</span>
+                    <div class="slider-counter slider-counter--dots">
+                      {%- for block in product_blocks -%}
+                        {%- if block.settings.product != blank -%}
+                          <button
+                            class="slider-counter__link slider-counter__link--dots{% if forloop.first %} slider-counter__link--active{% endif %}"
+                            aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ product_blocks.size }}"
+                            aria-controls="Slider-{{ section.id }}"
+                          >
+                            <span class="dot"></span>
+                          </button>
+                        {%- endif -%}
+                      {%- endfor -%}
                     </div>
                     <button
                       type="button"
