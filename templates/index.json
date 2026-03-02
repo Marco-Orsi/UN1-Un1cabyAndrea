@@ -39,6 +39,7 @@
       "settings": {
         "media_type": "image",
         "image": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
+        "video_url": "",
         "video_description": "",
         "logo": "shopify://shop_images/logo.png",
         "logo_width_desktop": 80,
@@ -175,7 +176,9 @@
       "settings": {
         "text_align": "center",
         "max_rotation": 10,
+        "image_1": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
         "image_1_link": "",
+        "image_2": "shopify://shop_images/a-bridge-sitting-in-thick-pink-and-purple-fog.jpg",
         "image_2_link": "",
         "text_color": "",
         "bg_color": "",
